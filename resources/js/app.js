@@ -7,6 +7,9 @@
 import './bootstrap';
 import 'laravel-datatables-vite';
 
+import {Modal} from 'bootstrap';
+window.Modal = Modal;
+
 $('.single-select2').select2();
 // import { createApp } from 'vue';
 

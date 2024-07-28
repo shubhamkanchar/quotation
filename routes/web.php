@@ -10,6 +10,7 @@ use App\Http\Controllers\MakeQuotationController;
 use App\Http\Controllers\ProductModelController;
 use App\Http\Controllers\TermsModelController;
 use App\Models\MakeQuotation;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,7 +32,6 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/login-with-otp', [App\Http\Controllers\Auth\LoginController::class, 'loginWithOtp'])->name('loginWithOtp');
-
 Route::middleware('auth')->group(function(){
     Route::resource('business',BusinessModelController::class);
     Route::resource('customer',CustomerModelController::class);
