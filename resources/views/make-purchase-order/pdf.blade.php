@@ -72,7 +72,7 @@
                     <span> &#x1F4F1; {{ $user->business->number }} ✉️ {{ $user->business->email }}</span>
                 </td>
                 <td style="width: 25%; text-align: right;">
-                    <span class="fw-bolder">QUOTATION</span>
+                    <span class="fw-bolder">PURCHASE ORDER</span>
                 </td>
             </tr>
         </tbody>
@@ -97,7 +97,7 @@
                    
                 </td>
                 <td style="width: 30%; text-align: right; vertical-align: top;">
-                    <span class="fw-bold">Quotation#</span>
+                    <span class="fw-bold">Purchase Order#</span>
                     &nbsp; &nbsp;
                     <span>Quote-7</span>
                     <br>
@@ -110,8 +110,7 @@
     <p> 
         Dear Sir/Mam, 
         <br>
-        <br>
-        Thank you for your valuable inquiry. We are pleased to quote as below
+        We are pleased to submit the purchase order as below
     </p>
     <table class="table-header">
         <thead>
@@ -188,7 +187,7 @@
             </tr>
         </tbody>
     </table>
-    <p>We hope you find our offer to be in line with your requirement.</p>
+    <p>Your prompt attention to this order is greatly appreciated, and we look forward to a successful transaction</p>
 
     @if ($terms)
         <h3>Terms & Conditions:</h3>

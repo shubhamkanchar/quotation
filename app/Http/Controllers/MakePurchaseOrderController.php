@@ -20,7 +20,7 @@ class MakePurchaseOrderController extends Controller
      */
     public function create()
     {
-        //
+        return view('make-purchase-order.add');
     }
 
     /**
