@@ -60,7 +60,7 @@
                             </div>
 
                             <div class="col-12">
-                                <button class="btn btn-dark" type="button" wire:click="addToQuotation">Add To Quotation</button>
+                                <button class="btn btn-dark" type="button" wire:click="addToQuotation">Add To {{$this->componentName}}</button>
                             </div>
                         </form>
                     </div>

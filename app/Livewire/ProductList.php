@@ -17,6 +17,7 @@ class ProductList extends Component
     #[Validate('required')] 
     public $price;
     public $description;
+    public $componentName = '';
 
     public function mount() {
         $this->user = auth()->user();

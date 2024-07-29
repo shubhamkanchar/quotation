@@ -2,17 +2,16 @@
 
 @section('content')
 <div class="container">
-    <livewire:make-quotation />
+    <livewire:make-invoice />
     <livewire:customer-list />
-    <livewire:product-list :componentName="'Quotation'"/>
+    <livewire:product-list :componentName="'Invoice'"/>
     <livewire:other-charges />
+    <livewire:paid-info />
     <livewire:terms-list />
 </div>
 @endsection
 @section('script')
     <script type="module">
-        $(document).ready(function() {
-        })
-
+        
     </script>
 @endsection

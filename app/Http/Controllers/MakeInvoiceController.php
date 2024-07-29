@@ -20,7 +20,7 @@ class MakeInvoiceController extends Controller
      */
     public function create()
     {
-        //
+        return view('make-invoice.add');
     }
 
     /**
