@@ -20,7 +20,7 @@ class MakeProformaInvoiceController extends Controller
      */
     public function create()
     {
-        //
+        return view('make-proforma.add');
     }
 
     /**

@@ -75,7 +75,7 @@
                     <span> &#x1F4F1; {{ $user->business->number }} ✉️ {{ $user->business->email }}</span>
                 </td>
                 <td style="width: 25%; text-align: right;">
-                    <span class="fw-bolder">Invoice</span>
+                    <span class="fw-bolder">PROFORMA INVOICE</span>
                 </td>
             </tr>
         </tbody>
@@ -92,15 +92,13 @@
                     <br />
                     <span>{{ $customer->name}} </span>
                     <br />
-                    <span>&#x1F4F1; {{ $customer->number}}</span>
-                    <br />
                     <span style="white-space: nowrap">✉️ {{ $customer->email}}</span>
                 </td>
                 <td style="width: 40%;">
                    
                 </td>
                 <td style="width: 30%; text-align: right; vertical-align: top;">
-                    <span class="fw-bold">Invoice#</span>
+                    <span class="fw-bold">Proforma Invoice#</span>
                     &nbsp; &nbsp;
                     <span>Inv-7</span>
                     <br>
