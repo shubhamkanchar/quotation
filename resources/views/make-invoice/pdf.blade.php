@@ -92,8 +92,6 @@
                     <br />
                     <span>{{ $customer->name}} </span>
                     <br />
-                    <span>&#x1F4F1; {{ $customer->number}}</span>
-                    <br />
                     <span style="white-space: nowrap">✉️ {{ $customer->email}}</span>
                 </td>
                 <td style="width: 40%;">
