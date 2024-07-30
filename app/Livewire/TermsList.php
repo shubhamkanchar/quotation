@@ -11,11 +11,12 @@ class TermsList extends Component
     public $user;
     public $selectedTerms = [];
     public $is_all_selected;
+    public $termName= '';
 
     public function mount() {
         $this->user = auth()->user();
         $this->terms = TermsModel::where('user_id', $this->user->id)
-        ->where('type', 'Quotation')
+        ->where('type', $this->termName)
         ->get();
     }
 

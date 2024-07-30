@@ -6,7 +6,7 @@
     <livewire:customer-list />
     <livewire:product-list :componentName="'Quotation'"/>
     <livewire:other-charges />
-    <livewire:terms-list />
+    <livewire:terms-list :termName="'Quotation'"/>
 </div>
 @endsection
 @section('script')

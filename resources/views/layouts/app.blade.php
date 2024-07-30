@@ -87,6 +87,9 @@
                                     <a class="dropdown-item" href="{{ route('make-proforma-invoice.create') }}">
                                         Make Proforma Invoice
                                     </a>
+                                    <a class="dropdown-item" href="{{ route('make-delivery-note.create') }}">
+                                        Make Delivery Notes
+                                    </a>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">

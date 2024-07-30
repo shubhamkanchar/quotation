@@ -7,7 +7,7 @@
     <livewire:product-list :componentName="'Proforma Invoice'"/>
     <livewire:other-charges />
     <livewire:paid-info />
-    <livewire:terms-list />
+    <livewire:terms-list :termName="'invoice'"/>
 </div>
 @endsection
 @section('script')

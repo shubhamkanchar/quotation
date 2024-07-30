@@ -2,11 +2,10 @@
 
 @section('content')
 <div class="container">
-    <livewire:make-purchase-order />
+    <livewire:make-delivery-notes />
     <livewire:customer-list />
-    <livewire:product-list :componentName="'Purchase Order'"/>
-    <livewire:other-charges />
-    <livewire:terms-list :termName="'Purchase Order'"/>
+    <livewire:product-list :componentName="'Delivery Notes'"/>
+    <livewire:terms-list :termName="'invoice'" />
 </div>
 @endsection
 @section('script')

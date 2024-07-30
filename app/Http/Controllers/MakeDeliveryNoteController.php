@@ -20,7 +20,7 @@ class MakeDeliveryNoteController extends Controller
      */
     public function create()
     {
-        //
+        return view('make-delivery-notes.add');
     }
 
     /**
