@@ -6,6 +6,7 @@
 
 import './bootstrap';
 import 'laravel-datatables-vite';
+import '@nextapps-be/livewire-sortablejs';
 
 import {Modal} from 'bootstrap';
 window.Modal = Modal;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\QuotationDataTable;
 use App\Models\CustomerModel;
 use App\Models\MakeQuotation;
 use App\Models\ProductModel;
@@ -13,9 +14,9 @@ class MakeQuotationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(QuotationDataTable $dataTable)
     {
-        //
+        return $dataTable->render('make-quotation.index');
     }
 
     /**
@@ -50,7 +51,7 @@ class MakeQuotationController extends Controller
      */
     public function edit(MakeQuotation $makeQuotation)
     {
-        //
+        return view('make-quotation.edit', compact('makeQuotation'));
     }
 
     /**
