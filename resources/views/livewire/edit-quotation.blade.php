@@ -12,7 +12,7 @@
                         <div class="text-secondary ms-2">
                             <span >Quotation No</span>
                             <br>
-                            -
+                            {{'Quote-'.$savedQuotation->quotation_no}}
                         </div>
                     </div>
                 </div>
@@ -48,7 +48,6 @@
                                     <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addProductModal" type="button">+</button>
                                 </div>
                             </div>
-
                             <div wire:sortable="updateProductOrder" wire:sortable.options="{ animation: 100 }">
                                 @if ($addedProducts)  
                                     @foreach ($addedProducts as $index => $product)     
@@ -100,7 +99,8 @@
                                         @endif
                                     </div>
                                 </div>
-                            @endif  
+                            @endif
+                            
                         </div>
 
                         <div class="row mb-2">
@@ -150,7 +150,11 @@
                                             &#8377;{{ $totalAmount }}
                                         @endif
                                     </div>
-                                    <button class="rounded-pill btn bg-white py-2 px-4" type="button" wire:click="generatePdf">Generate</button>
+                                    <div class="d-flex">
+                                        <button class="rounded-pill btn bg-white py-2 px-4 mx-2" type="button" wire:click="updateQuotation">Update</button>
+                                        <button class="rounded-pill btn bg-white py-2 px-4" wire:loading.remove wire:target="generatePdf" type="button" wire:click="generatePdf">Download</button>
+                                        <button class="rounded-pill btn bg-white py-2 px-4" wire:loading wire:target="generatePdf"  type="button">Downloading...</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

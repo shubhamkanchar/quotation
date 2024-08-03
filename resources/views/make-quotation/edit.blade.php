@@ -1,82 +1,25 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header h3">Update Customer</div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('api.term.store') }}" id="updateTerms">
-                        @csrf
-                        @method('PUT')
-                        <input type="hidden" name="token" id="token" value="{{ auth()?->user()?->createToken('api')->plainTextToken }}">
-                        <div class="row mb-3">
-                            <label for="type" class="col-md-4 col-form-label text-md-end">Type</label>
-                            <div class="col-md-6">
-                                <select id="type" type="text" class="form-select" name="type" required autocomplete="type" autofocus>
-                                    <option {{ $TermsModel->type == 'Quotation' ? 'selected' : '' }}>Quotation</option>
-                                    <option {{ $TermsModel->type == 'Invoice' ? 'selected' : '' }}>Invoice</option>
-                                    <option {{ $TermsModel->type == 'Purchase Order' ? 'selected' : '' }}>Purchase Order</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="terms" class="col-md-4 col-form-label text-md-end">Terms And Condition</label>
-                            <div class="col-md-6">
-                                <textarea id="terms" type="text" class="form-control" name="terms" required autocomplete="terms" autofocus>{{ $TermsModel->terms }}</textarea>
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Update
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <livewire:edit-quotation :quotation="$makeQuotation->id"/>
+    <livewire:customer-list />
+    <livewire:product-list :componentName="'Quotation'"/>
+    <livewire:other-charges :quotation="$makeQuotation->id"/>
+    <livewire:terms-list :termName="'Quotation'" :quotation="$makeQuotation->id"/>
 </div>
 @endsection
 @section('script')
-    <script>
+    <script type="module">
         $(document).ready(function() {
-            $(document).on('submit', '#updateTerms', function(e) {
-                e.preventDefault();
-                let myform = document.getElementById("updateTerms");
-                let fd = new FormData(myform);
-                $.ajax({
-                    url: "{{ route('api.term.update',$TermsModel->id) }}",
-                    data: fd,
-                    cache: false,
-                    processData: false,
-                    contentType: false,
-                    type: 'POST',
-                    headers: {
-                        'Authorization':'Bearer '+$('#token').val()
-                    },
-                    success: function(res) {
-                        Swal.fire({
-                            title: "Success",
-                            text: res.message,
-                            icon: "success"
-                        });
-                    },
-                    error:function(error){
-                        console.log(error);
-                        Swal.fire({
-                            title: "Error",
-                            text: error.responseJSON.message,
-                            icon: "error"
-                        });
-                    }
-                })
-            })
+           
+        $(document).on('quotationUpdated', function() {
+            Swal.fire({
+                title: "Success",
+                text: 'Quotation Updated Successfully',
+                icon: "success"
+            });
+        });
         })
+
     </script>
 @endsection

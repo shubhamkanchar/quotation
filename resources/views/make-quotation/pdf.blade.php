@@ -99,7 +99,7 @@
                 <td style="width: 30%; text-align: right; vertical-align: top;">
                     <span class="fw-bold">Quotation#</span>
                     &nbsp; &nbsp;
-                    <span>Quote-7</span>
+                    <span>Quote-{{$quotationNumber}}</span>
                     <br>
                     <span class="fw-bold">Date:</span>
                     {{ $date }}
