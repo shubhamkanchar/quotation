@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\PurchaseOrderDataTable;
 use App\Models\MakePurchaseOrder;
 use Illuminate\Http\Request;
 
@@ -10,9 +11,9 @@ class MakePurchaseOrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(PurchaseOrderDataTable $dataTable)
     {
-        //
+        return $dataTable->render('make-purchase-order.index');
     }
 
     /**
@@ -44,7 +45,8 @@ class MakePurchaseOrderController extends Controller
      */
     public function edit(MakePurchaseOrder $makePurchaseOrder)
     {
-        //
+        $makePurchaseOrder->load(['otherCharge']);
+        return view('make-purchase-order.edit', compact('makePurchaseOrder'));
     }
 
     /**

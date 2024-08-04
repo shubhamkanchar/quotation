@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\CustomerModel;
 use App\Models\MakePurchaseOrder as PurchaseOrder;
 use App\Models\OtherCharge;
+use App\Models\ProductModel;
 use App\Models\PurchaseOrderProduct;
 use App\Models\TermsModel;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -12,7 +13,7 @@ use Carbon\Carbon;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class MakePurchaseOrder extends Component
+class EditPurchaseOrder extends Component
 {
     public $totalAmount = 0;
     public $purchase_order_date;
@@ -23,14 +24,16 @@ class MakePurchaseOrder extends Component
     public $round_off;
     public $view;
     public $user;
+
+    public PurchaseOrder $savedPurchaseOrder;
     #[On('customerAdded')]
     public function addCustomer(CustomerModel $customer) {
         $this->addedCustomer = $customer;
     }
 
     #[On('productAdded')]
-    public function addProduct($data) {
-        $index = count($this->addedProducts);
+    public function addProduct($data, $index = null) {
+        $index = $index ?? count($this->addedProducts);
         $this->addedProducts[$index] = $data;
         $this->calculateTotal();
     }
@@ -68,10 +71,39 @@ class MakePurchaseOrder extends Component
         $this->calculateTotal();
     }
 
-    public function mount() {
+    public function mount(PurchaseOrder $purchaseOrder) {
+        $purchaseOrder->load(['otherCharge', 'customer', 'terms','purchaseOrderProducts' => function ($query) {
+            $query->orderBy('sort_order', 'asc');
+        }]);
+        
+        $this->savedPurchaseOrder = $purchaseOrder;
         $this->user = auth()->user();
-        $this->purchase_order_date = Carbon::now()->format('Y-m-d');
+        $this->purchase_order_date = $purchaseOrder->purchase_date;
+        $this->round_off = $purchaseOrder->round_off ? true : false;
+        $this->addProducts($purchaseOrder->purchaseOrderProducts);
+        $this->addedCustomer = $purchaseOrder->customer;
+        $this->addedTerms = $purchaseOrder->terms->keyBy('id');
+        $this->totalAmount = $purchaseOrder->total_amount;
+        if($purchaseOrder->otherCharge) {
+            $this->otherCharges = [ 
+                'other_charge_label' => $purchaseOrder?->otherCharge->label, 
+                'other_charge_amount' => $purchaseOrder?->otherCharge->amount, 
+                'gst_percentage' => $purchaseOrder?->otherCharge->gst_percentage, 
+                'gst_amount' => $purchaseOrder?->otherCharge->gst_amount, 
+                'is_taxable' => $purchaseOrder?->otherCharge->is_taxable,
+                'other_charge_id' => $purchaseOrder->otherCharge->id
+            ];
+        }
     }
+
+    public function addProducts($products) {
+        foreach($products as $quotationProduct) {
+            $product = ProductModel::firstWhere('id', $quotationProduct->product_id)->toArray();
+            $data = ['product' => $product, 'quantity' => $quotationProduct->quantity, 'price' => $quotationProduct->price, 'description' => $quotationProduct->description];
+            $this->addProduct($data, $quotationProduct->sort_order);
+        }
+    }
+
     public function calculateTotal() {
         $this->totalAmount = 0;
         foreach($this->addedProducts as $product) {
@@ -122,21 +154,41 @@ class MakePurchaseOrder extends Component
         $user = $this->user;
         $date = $this->purchase_order_date;
         $totalAmount = $this->totalAmount;
+        $purchaseNumber = $this->savedPurchaseOrder->purchase_order_no;
+        $fileName = 'PO_'.$purchaseNumber.'.pdf';
+        $pdf = PDF::loadView('make-purchase-order\pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'totalAmount', 'purchaseNumber'));
+        return response()->streamDownload(function () use ($pdf) {
+           echo  $pdf->stream();
+        }, $fileName);
+    }
+
+    public function updatePurchaseOrder() {
+        $this->validate([
+            'addedCustomer' => 'required',
+            'addedProducts' => 'required',
+        ], [
+            'addedCustomer' => 'Please add cutomer',
+            'addedProducts' => 'Please add product'
+        ]);
+
+        $products = $this->addedProducts;
+        $customer = $this->addedCustomer;
+        $terms = $this->addedTerms;
+        $charges = $this->otherCharges;
+        $date = $this->purchase_order_date;
         $totalAmount = $this->totalAmount;
-        $lastPurchase = PurchaseOrder::query()->orderBy('purchase_order_no', 'desc')->first();
-        $purchaseOrder = new PurchaseOrder();
-        $purchaseOrder->customer_id = $customer?->id;
-        $purchaseOrder->purchase_order_no = !is_null($lastPurchase?->purchase_order_no) ? ($lastPurchase?->purchase_order_no +1) : 1;
-        $purchaseOrder->total_amount = $totalAmount;
-        $purchaseOrder->purchase_date = $date;
-        $purchaseOrder->round_off = $this->round_off ? 1: 0;
-        $purchaseOrder->save();
-        $purchaseNumber = $purchaseOrder->purchase_order_no;
-    
+        
+        $this->savedPurchaseOrder->customer_id = $customer?->id;
+        $this->savedPurchaseOrder->total_amount = $totalAmount;
+        $this->savedPurchaseOrder->purchase_date = $date;
+        $this->savedPurchaseOrder->round_off = $this->round_off ? 1: 0;
+        $this->savedPurchaseOrder->save();
+        $purchaseNumber = $this->savedPurchaseOrder->purchase_order_no;
+        $this->savedPurchaseOrder->purchaseOrderProducts()->delete();
         foreach($products as $key => $product) {
             $PurchaseOrderProduct = new PurchaseOrderProduct();
             $PurchaseOrderProduct->product_id = $product['product']['id'];
-            $PurchaseOrderProduct->purchase_order_id = $purchaseOrder->id;
+            $PurchaseOrderProduct->purchase_order_id = $this->savedPurchaseOrder->id;
             $PurchaseOrderProduct->quantity = $product['quantity'];
             $PurchaseOrderProduct->description = $product['description'];
             $PurchaseOrderProduct->sort_order = $key;
@@ -146,23 +198,32 @@ class MakePurchaseOrder extends Component
 
         $otherCharge = new OtherCharge();
         if(!empty($charges)) {
+            if(isset($charges['other_charge_id'])) {
+                $otherCharge = OtherCharge::find($charges['other_charge_id']);
+            } else {
+                $this->savedPurchaseOrder->otherCharge()->delete();
+            }
             $otherCharge->label = $charges['other_charge_label'];
             $otherCharge->amount = $charges['other_charge_amount'];
             $otherCharge->is_taxable = $charges['is_taxable'] ? 1 : 0;
             $otherCharge->gst_percentage = $charges['gst_percentage'] ?? null;
             $otherCharge->gst_amount = $charges['gst_amount'] ?? null;
-            $otherCharge->chargeable_id = $purchaseOrder->id;;
+            $otherCharge->chargeable_id = $this->savedPurchaseOrder->id;;
             $otherCharge->chargeable_type = PurchaseOrder::class;
             $otherCharge->save();
         }
         
-        $termIds = array_keys($terms);
-        $purchaseOrder->terms()->sync($termIds);
-        $route = route('make-purchase-order.edit', $purchaseOrder->id);
-        $this->dispatch('purchaseOrderCreated', $route);
+        if($terms) {
+            $termIds = $terms->pluck('id')->toArray();
+            $this->savedPurchaseOrder->terms()->sync($termIds);
+        }
+       
+        $this->dispatch('purchaseOrderUpdated');
+
     }
+
     public function render()
     {
-        return view('livewire.make-purchase-order');
+        return view('livewire.edit-purchase-order');
     }
 }

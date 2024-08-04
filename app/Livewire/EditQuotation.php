@@ -199,7 +199,9 @@ class EditQuotation extends Component
         if(!empty($charges)) {
             if(isset($charges['other_charge_id'])) {
                 $otherCharge = OtherCharge::find($charges['other_charge_id']);
-            } 
+            } else {
+                $this->savedPurchaseOrder->otherCharge()->delete();
+            }
             $otherCharge->label = $charges['other_charge_label'];
             $otherCharge->amount = $charges['other_charge_amount'];
             $otherCharge->is_taxable = $charges['is_taxable'] ? 1 : 0;

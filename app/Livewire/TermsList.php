@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\MakeDeliveryNote;
 use App\Models\MakeInvoice;
 use App\Models\MakeProformaInvoice;
+use App\Models\MakePurchaseOrder;
 use App\Models\MakeQuotation;
 use App\Models\TermsModel;
 use Livewire\Component;
