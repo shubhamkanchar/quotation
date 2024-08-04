@@ -13,7 +13,7 @@
                         </div>
                     </div>
                     @foreach($customers as $customer)
-                        <div class="card shadow rounded bg-white mb-2" wire:click="selectCustomer({{$customer->id}})">
+                        <div class="card shadow rounded bg-white mb-2" wire:click="selectCustomer({{$customer->id}})" role="button">
                             <div class="card-body">
                             <span class="mb-2"> <b>{{$customer->name}}</b> </span> 
                             <br>

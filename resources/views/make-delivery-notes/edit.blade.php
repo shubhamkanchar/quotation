@@ -2,24 +2,21 @@
 
 @section('content')
 <div class="container">
-    <livewire:make-delivery-notes />
+    <livewire:edit-delivery-notes :deliveryNote="$makeDeliveryNote->id" />
     <livewire:customer-list />
     <livewire:product-list :componentName="'Delivery Notes'"/>
-    <livewire:terms-list :termName="'invoice'" />
+    <livewire:terms-list :id="$makeDeliveryNote->id" :termName="'invoice'" :componentName="'Delivery Notes'"/> />
 </div>
 @endsection
 @section('script')
     <script type="module">
         $(document).ready(function() {
-            $(document).on('deliveryNoteCreated', function($event) {
-                let route = $event.detail[0];
+            $(document).on('deliveryNoteUpdated', function($event) {
                 Swal.fire({
                     title: "Success",
-                    text: 'Delivery Note Created Successfully',
+                    text: 'Delivery Note Updated Successfully',
                     icon: "success"
-                }).then((result) => { 
-                    window.location.href = route;
-                });
+                })
             })
         })
 

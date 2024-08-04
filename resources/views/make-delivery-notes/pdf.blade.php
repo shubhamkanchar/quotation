@@ -99,10 +99,15 @@
                 <td style="width: 30%; text-align: right; vertical-align: top;">
                     <span class="fw-bold">Delivery#</span>
                     &nbsp; &nbsp;
-                    <span>Quote-7</span>
+                    <span>Order-{{$orderNumber}}</span>
                     <br>
                     <span class="fw-bold">Date:</span>
                     {{ $date }}
+                    <br>
+                    @if (!empty($referenceNo))
+                        <span class="fw-bold">Ref No:</span>
+                        {{ $referenceNo }}
+                    @endif
                 </td>
             </tr>
         </tbody>

@@ -13,7 +13,7 @@
                         </div>
                     </div>
                     @foreach($products as $product)
-                        <div class="card shadow rounded bg-white mb-2" wire:click="selectProduct({{$product->id}})">
+                        <div class="card shadow rounded bg-white mb-2" wire:click="selectProduct({{$product->id}})" role="button">
                             <div class="card-body">
                                 <span class="mb-2"> <b>{{$product->product_name}}</b> </span> 
                                 <br>
@@ -46,13 +46,15 @@
                                     <span class="invalid-feedback">{{ $message}}</span>
                                 @enderror
                             </div>
-                            <div class="col-12">
-                                <label for="floatingInputValue">Price</label>
-                                <input type="number" value="1" wire:model="price" class="form-control @error('price') is-invalid @enderror">
-                                @error('price')
-                                    <span class="invalid-feedback">{{ $message}}</span>
-                                @enderror
-                            </div>
+                            @if ($componentName != 'Delivery Notes')     
+                                <div class="col-12">
+                                    <label for="floatingInputValue">Price</label>
+                                    <input type="number" value="1" wire:model="price" class="form-control @error('price') is-invalid @enderror">
+                                    @error('price')
+                                        <span class="invalid-feedback">{{ $message}}</span>
+                                    @enderror
+                                </div>
+                            @endif
                             <div class="col-12 mb-2">
                                 <label for="floatingInputValue">Description</label>
                                 <textarea name="" class="form-control" wire:model="description">{{$selectedProduct->description}}</textarea>

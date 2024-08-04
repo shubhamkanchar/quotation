@@ -21,7 +21,7 @@
                         <div class="text-secondary ms-2">
                             <span >Delivery Note No</span>
                             <br>
-                            -
+                            Order-{{$savedDeliveryNote->order_no}}
                         </div>
                     </div>
                 </div>
@@ -117,7 +117,9 @@
                         <div class="row mb-0">
                             <div class="card-header bg-dark rounded-pill">
                                 <div class="d-flex justify-content-end">
-                                    <button class="rounded-pill btn bg-white py-2 px-4" type="button" wire:click="generatePdf">Generate</button>
+                                    <button class="rounded-pill btn bg-white py-2 px-4 mx-2" type="button" wire:click="updateDeliveryNote">Update</button>
+                                    <button class="rounded-pill btn bg-white py-2 px-4" wire:loading.remove wire:target="generatePdf" type="button" wire:click="generatePdf">Download</button>
+                                    <button class="rounded-pill btn bg-white py-2 px-4" wire:loading wire:target="generatePdf"  type="button">Downloading...</button>
                                 </div>
                             </div>
                         </div>

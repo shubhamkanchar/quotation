@@ -13,4 +13,9 @@ class TermsModel extends Model
     {
         return $this->belongsToMany(MakeQuotation::class, 'quotation_terms', 'term_id', 'quotation_id');
     }
+    
+    public function deliveryNotes()
+    {
+        return $this->belongsToMany(MakeDeliveryNote::class, 'delivery_terms', 'term_id', 'quotation_id');
+    }
 }

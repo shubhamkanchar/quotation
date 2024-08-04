@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\CustomerModel;
+use App\Models\DeliveryProduct;
+use App\Models\MakeDeliveryNote;
 use App\Models\TermsModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -13,6 +15,7 @@ class MakeDeliveryNotes extends Component
 {
     public $totalAmount = 0;
     public $delivery_date;
+    public $reference_no = '';
     public $addedCustomer;
     public $addedProducts = [];
     public $otherCharges = [];
@@ -57,6 +60,14 @@ class MakeDeliveryNotes extends Component
         unset($this->addedTerms[$index]);
     }
 
+    public function updateProductOrder($orders) {
+        $tempProducts = [];
+        foreach($orders as $index => $order) {
+            $tempProducts[$index] = $this->addedProducts[(int) $order['value']];
+        }
+        $this->addedProducts = $tempProducts;
+    }
+
     public function generatePdf() {
         $this->validate([
             'addedCustomer' => 'required',
@@ -72,11 +83,32 @@ class MakeDeliveryNotes extends Component
         $charges = $this->otherCharges;
         $user = $this->user;
         $date = $this->delivery_date;
-        $totalAmount = $this->totalAmount;
-        $pdf = PDF::loadView('make-delivery-notes\pdf', compact('products', 'customer', 'terms', 'user', 'date'));
-        return response()->streamDownload(function () use ($pdf) {
-           echo  $pdf->stream();
-        }, 'order.pdf');
+        $referenceNo = $this->reference_no;
+        $lastDeliveryNote = MakeDeliveryNote::query()->orderBy('order_no', 'desc')->first();
+        $deliveryNotes = new MakeDeliveryNote();
+        $deliveryNotes->customer_id = $customer?->id;
+        $deliveryNotes->order_no = !is_null($lastDeliveryNote?->order_no) ? ($lastDeliveryNote?->order_no +1) : 1;
+        $deliveryNotes->delivery_date = $date;
+        $deliveryNotes->reference_no = $referenceNo;
+        $deliveryNotes->save();
+        $orderNumber = $deliveryNotes->order_no;
+
+        foreach($products as $key => $product) {
+            $deliveryProduct = new DeliveryProduct();
+            $deliveryProduct->product_id = $product['product']['id'];
+            $deliveryProduct->delivery_note_id = $deliveryNotes->id;
+            $deliveryProduct->quantity = $product['quantity'];
+            $deliveryProduct->description = $product['description'];
+            $deliveryProduct->price = $product['price'];
+            $deliveryProduct->sort_order = $key;
+            $deliveryProduct->save();
+        }
+
+        $termIds = array_keys($terms);
+        $deliveryNotes->terms()->sync($termIds);
+
+        $route = route('make-delivery-note.edit', $deliveryNotes->id);
+        $this->dispatch('deliveryNoteCreated', $route);
     }
 
     public function render()

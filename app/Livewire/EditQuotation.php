@@ -93,7 +93,6 @@ class EditQuotation extends Component
                 'is_taxable' => $quotation?->otherCharge->is_taxable,
                 'other_charge_id' => $quotation->otherCharge->id
             ];
-            $this->dispatch('editCharges');
         }
     }
 
@@ -213,8 +212,9 @@ class EditQuotation extends Component
         
         if($terms) {
             $termIds = $terms->pluck('id')->toArray();
+            $this->savedQuotation->terms()->sync($termIds);
         }
-        $this->savedQuotation->terms()->sync($termIds);
+        
         $fileName = 'quotation_'.$quotationNumber.'.pdf';
         $this->dispatch('quotationUpdated');
     }

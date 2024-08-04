@@ -21,7 +21,7 @@ class ProductList extends Component
 
     public function mount() {
         $this->user = auth()->user();
-        $this->products = ProductModel::where('user_id', $this->user->id)->limit(10)->get();
+        $this->products = ProductModel::where('user_id', $this->user->id)->limit(100)->get();
     }
 
     public function selectProduct($id) {
@@ -34,7 +34,7 @@ class ProductList extends Component
 
     public function resetProductList() {
         $this->reset('selectedProduct', 'productSearch', 'quantity', 'description');
-        $this->products = ProductModel::where('user_id', $this->user->id)->limit(10)->get();
+        $this->products = ProductModel::where('user_id', $this->user->id)->limit(100)->get();
     }
 
     public function updatedProductSearch($value) 

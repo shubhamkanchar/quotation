@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\DeliveryNoteDataTable;
 use App\Models\MakeDeliveryNote;
 use Illuminate\Http\Request;
 
@@ -10,9 +11,9 @@ class MakeDeliveryNoteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(DeliveryNoteDataTable $dataTable)
     {
-        //
+        return $dataTable->render('make-delivery-notes.index');
     }
 
     /**
@@ -44,7 +45,7 @@ class MakeDeliveryNoteController extends Controller
      */
     public function edit(MakeDeliveryNote $makeDeliveryNote)
     {
-        //
+        return view('make-delivery-notes.edit', compact('makeDeliveryNote'));
     }
 
     /**

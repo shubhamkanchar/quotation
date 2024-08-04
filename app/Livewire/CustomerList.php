@@ -14,7 +14,7 @@ class CustomerList extends Component
 
     public function mount() {
         $this->user = auth()->user();
-        $this->customers = CustomerModel::where('user_id', $this->user->id)->limit(10)->get();
+        $this->customers = CustomerModel::where('user_id', $this->user->id)->limit(100)->get();
     }
 
     public function updatedCustomerSearch($value) 
@@ -35,7 +35,7 @@ class CustomerList extends Component
     }
     
     public function resetSearch() {
-        $this->customers = CustomerModel::where('user_id', $this->user->id)->limit(10)->get();
+        $this->customers = CustomerModel::where('user_id', $this->user->id)->limit(100)->get();
         $this->reset('customerSearch');
     }
     

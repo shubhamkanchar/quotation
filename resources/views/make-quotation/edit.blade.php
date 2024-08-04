@@ -5,7 +5,7 @@
     <livewire:customer-list />
     <livewire:product-list :componentName="'Quotation'"/>
     <livewire:other-charges :quotation="$makeQuotation->id"/>
-    <livewire:terms-list :termName="'Quotation'" :quotation="$makeQuotation->id"/>
+    <livewire:terms-list :termName="'Quotation'" :id="$makeQuotation->id" :componentName="'Quotation'"/>
 </div>
 @endsection
 @section('script')

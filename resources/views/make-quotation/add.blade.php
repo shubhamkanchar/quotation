@@ -15,7 +15,7 @@
                 let route = $event.detail[0];
                 Swal.fire({
                     title: "Success",
-                    text: 'Quotation Updated Successfully',
+                    text: 'Quotation Created Successfully',
                     icon: "success"
                 }).then((result) => { 
                     window.location.href = route;
