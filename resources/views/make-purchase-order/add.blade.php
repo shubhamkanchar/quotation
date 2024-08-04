@@ -12,6 +12,16 @@
 @section('script')
     <script type="module">
         $(document).ready(function() {
+            $(document).on('purchaseOrderCreated', function($event) {
+                let route = $event.detail[0];
+                Swal.fire({
+                    title: "Success",
+                    text: 'Purchase Order Created Successfully',
+                    icon: "success"
+                }).then((result) => { 
+                    window.location.href = route;
+                });
+            })
         })
 
     </script>

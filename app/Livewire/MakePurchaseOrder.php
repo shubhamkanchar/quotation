@@ -3,6 +3,9 @@
 namespace App\Livewire;
 
 use App\Models\CustomerModel;
+use App\Models\MakePurchaseOrder as PurchaseOrder;
+use App\Models\OtherCharge;
+use App\Models\PurchaseOrderProduct;
 use App\Models\TermsModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -95,6 +98,14 @@ class MakePurchaseOrder extends Component
         unset($this->addedTerms[$index]);
     }
 
+    public function updateProductOrder($orders) {
+        $tempProducts = [];
+        foreach($orders as $index => $order) {
+            $tempProducts[$index] = $this->addedProducts[(int) $order['value']];
+        }
+        $this->addedProducts = $tempProducts;
+    }
+
     public function generatePdf() {
         $this->validate([
             'addedCustomer' => 'required',
@@ -111,7 +122,46 @@ class MakePurchaseOrder extends Component
         $user = $this->user;
         $date = $this->purchase_order_date;
         $totalAmount = $this->totalAmount;
-        $pdf = PDF::loadView('make-purchase-order\pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'totalAmount'));
+        $totalAmount = $this->totalAmount;
+        $lastPurchase = PurchaseOrder::query()->orderBy('purchase_order_no', 'desc')->first();
+        $purchaseOrder = new PurchaseOrder();
+        $purchaseOrder->customer_id = $customer?->id;
+        $purchaseOrder->purchase_order_no = !is_null($lastPurchase?->purchase_order_no) ? ($lastPurchase?->purchase_order_no +1) : 1;
+        $purchaseOrder->total_amount = $totalAmount;
+        $purchaseOrder->purchase_date = $date;
+        $purchaseOrder->round_off = $this->round_off ? 1: 0;
+        $purchaseOrder->save();
+        $purchaseNumber = $purchaseOrder->purchase_order_no;
+    
+        foreach($products as $key => $product) {
+            $PurchaseOrderProduct = new PurchaseOrderProduct();
+            $PurchaseOrderProduct->product_id = $product['product']['id'];
+            $PurchaseOrderProduct->purchase_order_id = $purchaseOrder->id;
+            $PurchaseOrderProduct->quantity = $product['quantity'];
+            $PurchaseOrderProduct->description = $product['description'];
+            $PurchaseOrderProduct->sort_order = $key;
+            $PurchaseOrderProduct->price = $product['price'];
+            $PurchaseOrderProduct->save();
+        }
+
+        $otherCharge = new OtherCharge();
+        if(!empty($charges)) {
+            $otherCharge->label = $charges['other_charge_label'];
+            $otherCharge->amount = $charges['other_charge_amount'];
+            $otherCharge->is_taxable = $charges['is_taxable'] ? 1 : 0;
+            $otherCharge->gst_percentage = $charges['gst_percentage'] ?? null;
+            $otherCharge->gst_amount = $charges['gst_amount'] ?? null;
+            $otherCharge->chargeable_id = $purchaseOrder->id;;
+            $otherCharge->chargeable_type = PurchaseOrder::class;
+            $otherCharge->save();
+        }
+        
+        $termIds = array_keys($terms);
+        $purchaseOrder->terms()->sync($termIds);
+        $route = route('make-purchase-order.edit', $purchaseOrder->id);
+        $this->dispatch('purchaseOrderCreated', $route);
+
+        $pdf = PDF::loadView('make-purchase-order\pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'totalAmount', 'purchaseNumber'));
         return response()->streamDownload(function () use ($pdf) {
            echo  $pdf->stream();
         }, 'PO.pdf');

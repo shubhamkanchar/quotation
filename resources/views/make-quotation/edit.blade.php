@@ -4,7 +4,11 @@
     <livewire:edit-quotation :quotation="$makeQuotation->id"/>
     <livewire:customer-list />
     <livewire:product-list :componentName="'Quotation'"/>
-    <livewire:other-charges :quotation="$makeQuotation->id"/>
+    @if ($makeQuotation->otherCharge)   
+        <livewire:other-charges :otherCharge="$makeQuotation->otherCharge->id"/>
+    @else
+        <livewire:other-charges/>
+    @endif
     <livewire:terms-list :termName="'Quotation'" :id="$makeQuotation->id" :componentName="'Quotation'"/>
 </div>
 @endsection

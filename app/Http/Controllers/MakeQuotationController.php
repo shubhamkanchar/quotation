@@ -51,6 +51,7 @@ class MakeQuotationController extends Controller
      */
     public function edit(MakeQuotation $makeQuotation)
     {
+        $makeQuotation->load(['otherCharge']);
         return view('make-quotation.edit', compact('makeQuotation'));
     }
 

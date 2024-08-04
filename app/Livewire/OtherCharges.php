@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\MakeQuotation;
+use App\Models\OtherCharge;
 use Livewire\Component;
 
 class OtherCharges extends Component
@@ -22,13 +23,12 @@ class OtherCharges extends Component
         $this->dispatch('otherChargesAdded', ['other_charge_label' => $this->other_charge_label, 'other_charge_amount' => $this->other_charge_amount, 'gst_percentage' => $this->gst_percentage,'is_taxable' => $this->is_taxable ]);
     }
 
-    public function mount(MakeQuotation $quotation=null) {
-        $quotation->load(['otherCharge']);
-        if($quotation?->otherCharge) {
-            $this->other_charge_label = $quotation?->otherCharge->label; 
-            $this->other_charge_amount = $quotation?->otherCharge->amount;
-            $this->gst_percentage = $quotation?->otherCharge->gst_percentage;
-            $this->is_taxable = $quotation?->otherCharge->is_taxable ? true : false;
+    public function mount(OtherCharge $otherCharge=null) {
+        if($otherCharge) {
+            $this->other_charge_label = $otherCharge->label; 
+            $this->other_charge_amount = $otherCharge->amount;
+            $this->gst_percentage = $otherCharge->gst_percentage;
+            $this->is_taxable = $otherCharge->is_taxable ? true : false;
         }
     }
     
