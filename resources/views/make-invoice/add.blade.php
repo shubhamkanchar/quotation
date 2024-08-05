@@ -12,6 +12,15 @@
 @endsection
 @section('script')
     <script type="module">
-        
+        $(document).on('invoiceCreated', function($event) {
+            let route = $event.detail[0];
+            Swal.fire({
+                title: "Success",
+                text: 'Invoice Created Successfully',
+                icon: "success"
+            }).then((result) => { 
+                window.location.href = route;
+            });
+        })
     </script>
 @endsection

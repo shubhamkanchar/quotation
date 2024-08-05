@@ -3,6 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\CustomerModel;
+use App\Models\InvoiceProduct;
+use App\Models\MakeInvoice as Invoice;
+use App\Models\OtherCharge;
+use App\Models\PaidInfo;
 use App\Models\TermsModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -114,6 +118,14 @@ class MakeInvoice extends Component
         unset($this->addedTerms[$index]);
     }
 
+    public function updateProductOrder($orders) {
+        $tempProducts = [];
+        foreach($orders as $index => $order) {
+            $tempProducts[$index] = $this->addedProducts[(int) $order['value']];
+        }
+        $this->addedProducts = $tempProducts;
+    }
+
     public function generatePdf() {
         $this->validate([
             'addedCustomer' => 'required',
@@ -132,8 +144,57 @@ class MakeInvoice extends Component
         $totalAmount = $this->totalAmount;
         $paidAmount = $this->paidAmount;
         $numberToWords = new NumberToWords();
-        $numberTransformer = $numberToWords->getNumberTransformer('en'); // 'en' for English
+        $numberTransformer = $numberToWords->getNumberTransformer('en');
         $amountInWord = $numberTransformer->toWords($this->totalAmount);
+        $lastInvoice = Invoice::query()->orderBy('invoice_no', 'desc')->first();
+        $invoice = new Invoice();
+        $invoice->customer_id = $customer?->id;
+        $invoice->invoice_no = !is_null($lastInvoice?->invoice_no) ? ($lastInvoice?->invoice_no +1) : 1;
+        $invoice->total_amount = $totalAmount;
+        $invoice->paid_amount = $paidAmount;
+        $invoice->invoice_date = $date;
+        $invoice->round_off = $this->round_off ? 1: 0;
+        $invoice->save();
+        $invoiceNumber = $invoice->invoice_no;
+    
+        foreach($products as $key => $product) {
+            $invoiceProduct = new InvoiceProduct();
+            $invoiceProduct->product_id = $product['product']['id'];
+            $invoiceProduct->invoice_id = $invoice->id;
+            $invoiceProduct->quantity = $product['quantity'];
+            $invoiceProduct->description = $product['description'];
+            $invoiceProduct->sort_order = $key;
+            $invoiceProduct->price = $product['price'];
+            $invoiceProduct->save();
+        }
+
+        $otherCharge = new OtherCharge();
+        if(!empty($charges)) {
+            $otherCharge->label = $charges['other_charge_label'];
+            $otherCharge->amount = $charges['other_charge_amount'];
+            $otherCharge->is_taxable = $charges['is_taxable'] ? 1 : 0;
+            $otherCharge->gst_percentage = $charges['gst_percentage'] ?? null;
+            $otherCharge->gst_amount = $charges['gst_amount'] ?? null;
+            $otherCharge->chargeable_id = $invoice->id;;
+            $otherCharge->chargeable_type = Invoice::class;
+            $otherCharge->save();
+        }
+
+        foreach($this->paidInfos as $info) {
+           $paidInfo = new PaidInfo();
+           $paidInfo->amount = $info['amount'];
+           $paidInfo->paid_date = $info['date'];
+           $paidInfo->notes = $info['notes'];
+           $paidInfo->info_id = $invoice->id;;
+           $paidInfo->info_type = Invoice::class;
+           $paidInfo->save();
+        }
+
+        $termIds = array_keys($terms);
+        $invoice->terms()->sync($termIds);
+        $route = route('make-invoice.edit', $invoice->id);
+        $this->dispatch('invoiceCreated', $route);
+
         $pdf = Pdf::loadView('make-invoice\pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'totalAmount', 'amountInWord', 'paidAmount'));
         return response()->streamDownload(function () use ($pdf) {
            echo  $pdf->stream();

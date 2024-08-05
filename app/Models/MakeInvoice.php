@@ -8,4 +8,28 @@ use Illuminate\Database\Eloquent\Model;
 class MakeInvoice extends Model
 {
     use HasFactory;
+
+    public function otherCharge()
+    {
+        return $this->morphOne(OtherCharge::class, 'chargeable');
+    }
+
+    public function paidInfo()
+    {
+        return $this->morphOne(PaidInfo::class, 'info');
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(CustomerModel::class, 'customer_id', 'id');
+    }
+
+    public function invoiceProducts() {
+        return $this->hasMany(InvoiceProduct::class, 'invoice_id', 'id');
+    }
+
+    public function terms()
+    {
+        return $this->belongsToMany(TermsModel::class, 'invoice_terms', 'invoice_id', 'term_id');
+    }
 }
