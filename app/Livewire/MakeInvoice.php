@@ -19,6 +19,7 @@ class MakeInvoice extends Component
     public $totalAmount = 0;
     public $paidAmount = 0;
     public $invoice_date;
+    public $po_no = null;
     public $addedCustomer;
     public $addedProducts = [];
     public $otherCharges = [];
@@ -116,6 +117,7 @@ class MakeInvoice extends Component
     
     public function removeTerms($index) {
         unset($this->addedTerms[$index]);
+        $this->dispatch('termRemoved', $index);
     }
 
     public function updateProductOrder($orders) {
@@ -150,9 +152,11 @@ class MakeInvoice extends Component
         $invoice = new Invoice();
         $invoice->customer_id = $customer?->id;
         $invoice->invoice_no = !is_null($lastInvoice?->invoice_no) ? ($lastInvoice?->invoice_no +1) : 1;
-        $invoice->total_amount = $totalAmount;
+        $invoice->total_amount = $totalAmount + $paidAmount;
         $invoice->paid_amount = $paidAmount;
+        $invoice->balance_due = $totalAmount;
         $invoice->invoice_date = $date;
+        $invoice->po_no = $this->po_no;
         $invoice->round_off = $this->round_off ? 1: 0;
         $invoice->save();
         $invoiceNumber = $invoice->invoice_no;
@@ -194,11 +198,6 @@ class MakeInvoice extends Component
         $invoice->terms()->sync($termIds);
         $route = route('make-invoice.edit', $invoice->id);
         $this->dispatch('invoiceCreated', $route);
-
-        $pdf = Pdf::loadView('make-invoice\pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'totalAmount', 'amountInWord', 'paidAmount'));
-        return response()->streamDownload(function () use ($pdf) {
-           echo  $pdf->stream();
-        }, 'invoice.pdf');
     }
     
     public function render()

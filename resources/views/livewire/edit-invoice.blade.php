@@ -4,24 +4,22 @@
             <div class="card bg-white p-2">
                 <div class="card-header rounded-0 border-bottom-0 bg-secondary-subtle">
                     <div class="d-flex justify-content-between">
-                        <div class="text-secondary ms-2">
-                            <div class="d-flex">
-                                <div>
-                                    <span >Invoice Date</span>
-                                    <br>
-                                    <input type="date" class="form-control" id="InvoiceDate" wire:model="invoice_date">
-                                </div>
-                                <div class="ms-2">
-                                    <span>P.O. Number </span>
-                                    <br>
-                                    <input type="text" class="form-control" id="PoNO" wire:model="po_no">
-                                </div>
-                            </div>   
-                        </div>
+                        <div class="d-flex">
+                            <div>
+                                <span >Invoice Date</span>
+                                <br>
+                                <input type="date" class="form-control" id="InvoiceDate" wire:model="invoice_date">
+                            </div>
+                            <div class="ms-2">
+                                <span>P.O. Number </span>
+                                <br>
+                                <input type="text" class="form-control" id="PoNO" wire:model="po_no">
+                            </div>
+                        </div>  
                         <div class="text-secondary ms-2">
                             <span >Invoice No</span>
                             <br>
-                            -
+                            {{'Inv-'.$savedInvoice->invoice_no}}
                         </div>
                     </div>
                 </div>
@@ -178,7 +176,11 @@
                                         &#8377;{{ $totalAmount }}
                                         {{-- @endif --}}
                                     </div>
-                                    <button class="rounded-pill btn bg-white py-2 px-4" type="button" wire:click="generatePdf">Generate</button>
+                                    <div class="d-flex">
+                                        <button class="rounded-pill btn bg-white py-2 px-4 mx-2" type="button" wire:click="updateInvoice">Update</button>
+                                        <button class="rounded-pill btn bg-white py-2 px-4" wire:loading.remove wire:target="generatePdf" type="button" wire:click="generatePdf">Download</button>
+                                        <button class="rounded-pill btn bg-white py-2 px-4" wire:loading wire:target="generatePdf"  type="button">Downloading...</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

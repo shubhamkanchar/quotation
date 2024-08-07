@@ -8,6 +8,7 @@ use App\Models\MakeProformaInvoice;
 use App\Models\MakePurchaseOrder;
 use App\Models\MakeQuotation;
 use App\Models\TermsModel;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class TermsList extends Component
@@ -60,6 +61,12 @@ class TermsList extends Component
         foreach($this->terms as $term) {
             $this->selectedTerms[$term->id] = $value;
         } 
+    }
+    #[On('termRemoved')]
+    public function removeTerm($index) {
+        if(isset($this->selectedTerms[$index])) {
+            $this->selectedTerms[$index] = false;
+        }
     }
 
     public function updatedSelectedTerms($value) {

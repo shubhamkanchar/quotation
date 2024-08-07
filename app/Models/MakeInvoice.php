@@ -14,9 +14,9 @@ class MakeInvoice extends Model
         return $this->morphOne(OtherCharge::class, 'chargeable');
     }
 
-    public function paidInfo()
+    public function paidInfos()
     {
-        return $this->morphOne(PaidInfo::class, 'info');
+        return $this->morphMany(PaidInfo::class, 'info');
     }
 
     public function customer()

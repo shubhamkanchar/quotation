@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\MakeInvoice;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,6 +17,10 @@ return new class extends Migration
                 $table->unsignedBigInteger('invoice_no'); // for pdf
             }
 
+            if(!Schema::hasColumn('make_invoices', 'po_no')) {
+                $table->string('po_no')->nullable();
+            }
+
             if(!Schema::hasColumn('make_invoices', 'customer_id')) {
                 $table->unsignedBigInteger('customer_id');
             }
@@ -23,12 +28,19 @@ return new class extends Migration
             if(!Schema::hasColumn('make_invoices', 'total_amount')) {
                 $table->float('total_amount')->nullable();
             }
+
             if(!Schema::hasColumn('make_invoices', 'paid_amount')) {
                 $table->float('paid_amount')->nullable();
             }
+
+            if(!Schema::hasColumn('make_invoices', 'balance_due')) {
+                $table->float('balance_due')->nullable();
+            }
+
             if(!Schema::hasColumn('make_invoices', 'round_off')) {
                 $table->boolean('round_off')->nullable();
             }
+
             if(!Schema::hasColumn('make_invoices', 'invoice_date')) {
                 $table->date('invoice_date');
             }
@@ -44,11 +56,17 @@ return new class extends Migration
             if(Schema::hasColumn('make_invoices', 'invoice_no')) {
                 $table->dropColumn('invoice_no');
             }
+            if(Schema::hasColumn('make_invoices', 'po_no')) {
+                $table->dropColumn('po_no');
+            }
             if(Schema::hasColumn('make_invoices', 'customer_id')) {
                 $table->dropColumn('customer_id');
             }
             if(Schema::hasColumn('make_invoices', 'total_amount')) {
                 $table->dropColumn('total_amount');
+            }
+            if(Schema::hasColumn('make_invoices', 'balance_due')) {
+                $table->dropColumn('balance_due');
             }
             if(Schema::hasColumn('make_invoices', 'round_off')) {
                 $table->dropColumn('round_off');

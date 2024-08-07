@@ -103,6 +103,7 @@ class EditQuotation extends Component
             $this->addProduct($data, $quotationProduct->sort_order);
         }
     }
+    
     public function calculateTotal() {
         $this->totalAmount = 0;
         foreach($this->addedProducts as $product) {
@@ -127,6 +128,7 @@ class EditQuotation extends Component
     
     public function removeTerms($index) {
         unset($this->addedTerms[$index]);
+        $this->dispatch('termRemoved', $index);
     }
 
     public function updateProductOrder($orders) {

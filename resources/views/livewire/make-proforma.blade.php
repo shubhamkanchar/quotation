@@ -137,7 +137,7 @@
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between">
                                             <span  class="align-self-center">Paid Amount</span>
-                                            <span>{{$paidAmount}}</span>
+                                            <span> &#8377;{{$paidAmount}}</span>
                                         </div>
                                     </div>
                                 </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\InvoiceDataTable;
 use App\Models\MakeInvoice;
 use Illuminate\Http\Request;
 
@@ -10,9 +11,9 @@ class MakeInvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(InvoiceDataTable $dataTable)
     {
-        //
+        return $dataTable->render('make-invoice.index');
     }
 
     /**
@@ -44,7 +45,8 @@ class MakeInvoiceController extends Controller
      */
     public function edit(MakeInvoice $makeInvoice)
     {
-        //
+        $makeInvoice->load(['otherCharge', 'paidInfos']);
+        return view('make-invoice.edit', compact('makeInvoice'));
     }
 
     /**

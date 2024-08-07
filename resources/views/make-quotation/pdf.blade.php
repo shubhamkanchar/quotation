@@ -190,7 +190,7 @@
     </table>
     <p>We hope you find our offer to be in line with your requirement.</p>
 
-    @if ($terms)
+    @if ($terms && count($terms) > 0)
         <h3>Terms & Conditions:</h3>
         <ul>
             @foreach ($terms as $term)

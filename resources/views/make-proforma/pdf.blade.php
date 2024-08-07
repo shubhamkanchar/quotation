@@ -205,7 +205,7 @@
         </tbody>
     </table>
 
-    @if ($terms)
+    @if ($terms && count($terms) > 0)
         <h3>Terms & Conditions:</h3>
         <ul>
             @foreach ($terms as $term)

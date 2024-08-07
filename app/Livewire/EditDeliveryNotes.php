@@ -78,6 +78,7 @@ class EditDeliveryNotes extends Component
     
     public function removeTerms($index) {
         unset($this->addedTerms[$index]);
+        $this->dispatch('termRemoved', $index);
     }
 
     public function updateProductOrder($orders) {

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\PaidInfo as ModelsPaidInfo;
 use Livewire\Component;
 
 class PaidInfo extends Component
@@ -39,6 +40,19 @@ class PaidInfo extends Component
     public function resetForm() {
         $this->showInfo = true;
         $this->reset('paid_date','paid_amount', 'notes');
+    }
+
+    public function mount($paidInfoIds = []) {
+        $paidInfos = ModelsPaidInfo::whereIn('id', $paidInfoIds)->get();
+        $index = 0;
+        foreach($paidInfos as $info) {
+            $this->paidInfos[$index]['date'] = $info->paid_date;
+            $this->paidInfos[$index]['amount'] = $info->amount;
+            $this->paidInfos[$index]['notes'] = $info->notes;
+            $index++;
+            $this->showInfo = false;
+        }
+        $this->dispatch('PaidInfoRemoved', $this->paidInfos);
     }
 
     public function render()

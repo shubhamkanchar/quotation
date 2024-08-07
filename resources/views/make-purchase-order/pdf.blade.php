@@ -189,7 +189,7 @@
     </table>
     <p>Your prompt attention to this order is greatly appreciated, and we look forward to a successful transaction</p>
 
-    @if ($terms)
+    @if ($terms && count($terms) > 0)
         <h3>Terms & Conditions:</h3>
         <ul>
             @foreach ($terms as $term)

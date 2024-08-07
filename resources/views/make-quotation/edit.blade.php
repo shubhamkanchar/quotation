@@ -3,13 +3,13 @@
 <div class="container">
     <livewire:edit-quotation :quotation="$makeQuotation->id"/>
     <livewire:customer-list />
-    <livewire:product-list :componentName="'Quotation'"/>
+    <livewire:product-list :componentName="'Invoice'"/>
     @if ($makeQuotation->otherCharge)   
         <livewire:other-charges :otherCharge="$makeQuotation->otherCharge->id"/>
     @else
         <livewire:other-charges/>
     @endif
-    <livewire:terms-list :termName="'Quotation'" :id="$makeQuotation->id" :componentName="'Quotation'"/>
+    <livewire:terms-list :termName="'Quotation'" :id="$makeQuotation->id" :componentName="'Invoice'"/>
 </div>
 @endsection
 @section('script')

@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\MakeInvoice;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -22,8 +23,23 @@ class InvoiceDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'invoice.action')
-            ->setRowId('id');
+        ->addColumn('invoice_no', function($row) {
+            return 'Invoice-'.$row->quotation_no;
+        })
+        ->addColumn('customer_id', function($row) {
+            return ucfirst($row->customer_name);
+        })
+        ->editColumn('invoice_date',function($row) {
+            if($row->invoice_date) {
+                $date = Carbon::createFromFormat('Y-m-d', $row->invoice_date)->format('d-m-Y');
+                return $date;
+            }
+            return '-';
+        })
+        ->addColumn('action', function($row){
+            return '<a href="'.route('make-invoice.edit',$row->id).'" class="btn btn-primary me-2" >Edit</a><button class="btn btn-danger delete-quoinvoicetation" data-id="'.$row->id.'">Delete</button>';
+        })
+        ->setRowId('id');
     }
 
     /**
@@ -31,7 +47,9 @@ class InvoiceDataTable extends DataTable
      */
     public function query(MakeInvoice $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->newQuery()
+        ->join('customer_models', 'make_invoices.customer_id', '=', 'customer_models.id')
+        ->select('make_invoices.*', 'customer_models.name as customer_name');
     }
 
     /**
@@ -62,15 +80,14 @@ class InvoiceDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('invoice_no')->title('Invoice'),
+            Column::make('invoice_date')->title('Invoice Date'),
+            Column::make('customer_name')->title('To User')->searchable('true')->name('customer_models.name'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
-                  ->width(60)
+                  ->width(160)
                   ->addClass('text-center'),
-            Column::make('id'),
-            Column::make('add your columns'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
         ];
     }
 

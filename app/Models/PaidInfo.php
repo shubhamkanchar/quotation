@@ -13,4 +13,5 @@ class PaidInfo extends Model
     {
         return $this->morphTo();
     }
+    
 }

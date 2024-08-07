@@ -102,10 +102,15 @@
                 <td style="width: 30%; text-align: right; vertical-align: top;">
                     <span class="fw-bold">Invoice#</span>
                     &nbsp; &nbsp;
-                    <span>Inv-7</span>
+                    <span>Inv-{{$invoiceNumber}}</span>
                     <br>
                     <span class="fw-bold">Date:</span>
                     {{ $date }}
+                    <br>
+                    @if (!empty($poNo))
+                        <span class="fw-bold">PO#</span>
+                        {{ $poNo }}
+                    @endif
                 </td>
             </tr>
         </tbody>
@@ -207,7 +212,7 @@
         </tbody>
     </table>
 
-    @if ($terms)
+    @if ($terms && count($terms) > 0)
         <h3>Terms & Conditions:</h3>
         <ul>
             @foreach ($terms as $term)
