@@ -5,24 +5,39 @@
                 <div class="card-header rounded-0 border-bottom-0 bg-secondary-subtle">
                     <div class="d-flex justify-content-between">
                         <div class="text-secondary ms-2">
-                            <span >Quotation Date</span>
-                            <br>
-                            <input type="date" class="form-control" id="quotationDate" wire:model="quotation_date">   
+                            
+                            <div class="d-flex">
+                                <div>
+                                    <span >Proforma Invoice Date</span>
+                                    <br>
+                                    <input type="date" class="form-control" id="proformaDate" wire:model="proforma_date">  
+                                </div>
+                                <div class="ms-2">
+                                    <span >Due date</span>
+                                    <br>
+                                    <input type="date" class="form-control" id="dueDate" wire:model="due_date">  
+                                </div>
+                                <div class="ms-2">
+                                    <span>P.O. Number </span>
+                                    <br>
+                                    <input type="text" class="form-control" id="PoNO" wire:model="po_no">
+                                </div>
+                            </div> 
                         </div>
                         <div class="text-secondary ms-2">
-                            <span >Quotation No</span>
+                            <span >Proforma Invoice No</span>
                             <br>
                             -
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('api.term.store') }}" id="addQuotation">
+                    <form>
                         @csrf
                         <div class="row mb-2">
                             <div class="card-header bg-secondary-subtle rounded">
                                 <div class="d-flex justify-content-between">
-                                    <span class="align-self-center"> <b>TO</b></span>
+                                    <span class="align-self-center"> <b>BILL TO</b></span>
                                     <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addCustomerModal">+</button>
                                 </div>
                             </div>
@@ -48,7 +63,6 @@
                                     <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addProductModal" type="button">+</button>
                                 </div>
                             </div>
-
                             <div wire:sortable="updateProductOrder" wire:sortable.options="{ animation: 100 }">
                                 @if ($addedProducts)  
                                     @foreach ($addedProducts as $index => $product)     
@@ -65,11 +79,11 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between">
                                                     <span class="text-secondary">Amount</span> 
-                                                    <span> {{$product['quantity']}} * &#8377;{{ $product['price']}} = &#8377;{{ (float)$product['quantity'] * (float)$product['price'] }}</span>
+                                                    <span> {{$product['quantity']}} * &#8377;{{ $product['price']}} = &#8377;{{ (int)$product['quantity'] * (int)$product['price'] }}</span>
                                                 </div>
                                                 <div class="d-flex justify-content-between">
                                                     <span class="text-secondary">Total amount</span> 
-                                                    <span class="fw-bold"> &#8377;{{ (float)$product['quantity'] * (float)$product['price'] }}</span>
+                                                    <span class="fw-bold"> &#8377;{{ (int)$product['quantity'] * (int)$product['price'] }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -100,7 +114,8 @@
                                         @endif
                                     </div>
                                 </div>
-                            @endif  
+                            @endif
+                            
                         </div>
 
                         <div class="row mb-2">
@@ -130,6 +145,25 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row mb-2">
+                            <div class="card-header mb-2 bg-secondary-subtle rounded">
+                                <div class="d-flex justify-content-between">
+                                    <span class="align-self-center"> <b>Paid Info</b></span>
+                                    <button class="btn btn-dark" type="button" data-bs-toggle="modal" data-bs-target="#addPaidInfoModal">+</button>
+                                </div>
+                            </div>
+                            @if($paidAmount)    
+                                <div class="card shadow rounded bg-white mb-2">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <span  class="align-self-center">Paid Amount</span>
+                                            <span> &#8377;{{$paidAmount}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
                         @if ($errors->any())
                             <div class="alert alert-dark alert-dismissible fade show" role="alert">
                                 <ul>
@@ -146,11 +180,15 @@
                                     <div class="text-white ms-2">
                                         <span >Amount Due</span>
                                         <br>
-                                        @if ($totalAmount)
-                                            &#8377;{{ $totalAmount }}
-                                        @endif
+                                        {{-- @if ($totalAmount) --}}
+                                        &#8377;{{ (float) $totalAmount }}
+                                        {{-- @endif --}}
                                     </div>
-                                    <button class="rounded-pill btn bg-white py-2 px-4" type="button" wire:click="generatePdf">Generate</button>
+                                    <div class="d-flex">
+                                        <button class="rounded-pill btn bg-white py-2 px-4 mx-2" type="button" wire:click="updateInvoice">Update</button>
+                                        <button class="rounded-pill btn bg-white py-2 px-4" wire:loading.remove wire:target="generatePdf" type="button" wire:click="generatePdf">Download</button>
+                                        <button class="rounded-pill btn bg-white py-2 px-4" wire:loading wire:target="generatePdf"  type="button">Downloading...</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -163,7 +201,6 @@
 @script
     <script type="module">
         $(document).on('change', '#roundOff',function() {
-            console.log($(this).is(':checked'));
             @this.call('roundOff', $(this).is(':checked'))
         })
         $(document).on('customerAdded', function(event) {

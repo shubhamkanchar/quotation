@@ -3,6 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\CustomerModel;
+use App\Models\MakeProformaInvoice;
+use App\Models\OtherCharge;
+use App\Models\PaidInfo;
+use App\Models\ProformaInvoiceProduct;
 use App\Models\TermsModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -15,6 +19,8 @@ class MakeProforma extends Component
     public $totalAmount = 0;
     public $paidAmount = 0;
     public $proforma_date;
+    public $due_date;
+    public $po_no;
     public $addedCustomer;
     public $addedProducts = [];
     public $otherCharges = [];
@@ -115,6 +121,14 @@ class MakeProforma extends Component
         $this->dispatch('termRemoved', $index);
     }
 
+    public function updateProductOrder($orders) {
+        $tempProducts = [];
+        foreach($orders as $index => $order) {
+            $tempProducts[$index] = $this->addedProducts[(int) $order['value']];
+        }
+        $this->addedProducts = $tempProducts;
+    }
+
     public function generatePdf() {
         $this->validate([
             'addedCustomer' => 'required',
@@ -130,15 +144,69 @@ class MakeProforma extends Component
         $charges = $this->otherCharges;
         $user = $this->user;
         $date = $this->proforma_date;
+        $dueDate = $this->due_date;
+        $poNo = $this->po_no;
         $totalAmount = $this->totalAmount;
         $paidAmount = $this->paidAmount;
         $numberToWords = new NumberToWords();
         $numberTransformer = $numberToWords->getNumberTransformer('en'); // 'en' for English
         $amountInWord = $numberTransformer->toWords($this->totalAmount);
-        $pdf = Pdf::loadView('make-proforma\pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'totalAmount', 'amountInWord', 'paidAmount'));
+        $lastInvoice = MakeProformaInvoice::query()->orderBy('proforma_invoice_no', 'desc')->first();
+        $proformaInvoice = new MakeProformaInvoice();
+        $proformaInvoice->customer_id = $customer?->id;
+        $proformaInvoice->proforma_invoice_no = !is_null($lastInvoice?->proforma_invoice_no) ? ($lastInvoice?->proforma_invoice_no +1) : 1;
+        $proformaInvoice->total_amount = $totalAmount + $paidAmount;
+        $proformaInvoice->paid_amount = $paidAmount;
+        $proformaInvoice->balance_due = $totalAmount;
+        $proformaInvoice->proforma_invoice_date = $date;
+        $proformaInvoice->due_date = $dueDate;
+        $proformaInvoice->po_no = $poNo;
+        $proformaInvoice->round_off = $this->round_off ? 1: 0;
+        $proformaInvoice->save();
+        $proformaInvoiceNumber = $proformaInvoice->proforma_invoice_no;
+    
+        foreach($products as $key => $product) {
+            $invoiceProduct = new ProformaInvoiceProduct();
+            $invoiceProduct->product_id = $product['product']['id'];
+            $invoiceProduct->proforma_invoice_id = $proformaInvoice->id;
+            $invoiceProduct->quantity = $product['quantity'];
+            $invoiceProduct->description = $product['description'];
+            $invoiceProduct->sort_order = $key;
+            $invoiceProduct->price = $product['price'];
+            $invoiceProduct->save();
+        }
+
+        $otherCharge = new OtherCharge();
+        if(!empty($charges)) {
+            $otherCharge->label = $charges['other_charge_label'];
+            $otherCharge->amount = $charges['other_charge_amount'];
+            $otherCharge->is_taxable = $charges['is_taxable'] ? 1 : 0;
+            $otherCharge->gst_percentage = $charges['gst_percentage'] ?? null;
+            $otherCharge->gst_amount = $charges['gst_amount'] ?? null;
+            $otherCharge->chargeable_id = $proformaInvoice->id;;
+            $otherCharge->chargeable_type = MakeProformaInvoice::class;
+            $otherCharge->save();
+        }
+
+        foreach($this->paidInfos as $info) {
+           $paidInfo = new PaidInfo();
+           $paidInfo->amount = $info['amount'];
+           $paidInfo->paid_date = $info['date'];
+           $paidInfo->notes = $info['notes'];
+           $paidInfo->info_id = $proformaInvoice->id;;
+           $paidInfo->info_type = MakeProformaInvoice::class;
+           $paidInfo->save();
+        }
+
+        $termIds = array_keys($terms);
+        $proformaInvoice->terms()->sync($termIds);
+        $route = route('make-proforma.edit', $proformaInvoice->id);
+        $this->dispatch('ProformaInvoiceCreated', $route);
+
+        $pdf = Pdf::loadView('make-proforma\pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'poNo','dueDate','totalAmount', 'amountInWord', 'paidAmount', 'proformaInvoiceNumber'));
         return response()->streamDownload(function () use ($pdf) {
            echo  $pdf->stream();
-        }, 'invoice.pdf');
+        }, 'pi_invoice.pdf');
     }
     public function render()
     {

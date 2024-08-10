@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\ProformaInvoiceDataTable;
 use App\Models\MakeProformaInvoice;
 use Illuminate\Http\Request;
 
@@ -10,9 +11,9 @@ class MakeProformaInvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(ProformaInvoiceDataTable $dataTable)
     {
-        //
+        return $dataTable->render('make-proforma.index');
     }
 
     /**
@@ -44,7 +45,8 @@ class MakeProformaInvoiceController extends Controller
      */
     public function edit(MakeProformaInvoice $makeProformaInvoice)
     {
-        //
+        $makeProformaInvoice->load(['otherCharge', 'paidInfos']);
+        return view('make-proforma.edit', compact('makeProformaInvoice'));
     }
 
     /**

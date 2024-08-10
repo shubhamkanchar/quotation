@@ -5,9 +5,24 @@
                 <div class="card-header rounded-0 border-bottom-0 bg-secondary-subtle">
                     <div class="d-flex justify-content-between">
                         <div class="text-secondary ms-2">
-                            <span >Proforma Invoice Date</span>
-                            <br>
-                            <input type="date" class="form-control" id="proformaDate" wire:model="proforma_date">   
+                            
+                            <div class="d-flex">
+                                <div>
+                                    <span >Proforma Invoice Date</span>
+                                    <br>
+                                    <input type="date" class="form-control" id="proformaDate" wire:model="proforma_date">  
+                                </div>
+                                <div class="ms-2">
+                                    <span >Due date</span>
+                                    <br>
+                                    <input type="date" class="form-control" id="dueDate" wire:model="due_date">  
+                                </div>
+                                <div class="ms-2">
+                                    <span>P.O. Number </span>
+                                    <br>
+                                    <input type="text" class="form-control" id="PoNO" wire:model="po_no">
+                                </div>
+                            </div> 
                         </div>
                         <div class="text-secondary ms-2">
                             <span >Proforma Invoice No</span>
@@ -48,27 +63,33 @@
                                     <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addProductModal" type="button">+</button>
                                 </div>
                             </div>
-
-                            @if ($addedProducts)  
-                                @foreach ($addedProducts as $index => $product)     
-                                    <div class="card mt-2 shadow rounded bg-white mb-2">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between">
-                                                <span class="fw-bold">{{ $product['product']['product_name'] }}</span> 
-                                                <span> <i class="fas fa-trash text-dark" wire:click="removeProduct({{$index}})" role="button"></i></span>
-                                            </div>
-                                            <div class="d-flex justify-content-between">
-                                                <span class="text-secondary">Amount</span> 
-                                                <span> {{$product['quantity']}} * &#8377;{{ $product['price']}} = &#8377;{{ (int)$product['quantity'] * (int)$product['price'] }}</span>
-                                            </div>
-                                            <div class="d-flex justify-content-between">
-                                                <span class="text-secondary">Total amount</span> 
-                                                <span class="fw-bold"> &#8377;{{ (int)$product['quantity'] * (int)$product['price'] }}</span>
+                            <div wire:sortable="updateProductOrder" wire:sortable.options="{ animation: 100 }">
+                                @if ($addedProducts)  
+                                    @foreach ($addedProducts as $index => $product)     
+                                        <div class="card mt-2 shadow rounded bg-white mb-2" wire:sortable.item="{{ $index }}" wire:index="task-{{ $index }}">
+                                            @if (count($addedProducts) > 1)
+                                                <div class="card-header bg-white">
+                                                    <i class="fa-solid fa-up-down-left-right" wire:sortable.handle style="cursor: grab"></i>
+                                                </div>
+                                            @endif
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="fw-bold">{{ $product['product']['product_name'] }}</span> 
+                                                    <span> <i class="fas fa-trash text-dark" wire:click="removeProduct({{$index}})" role="button"></i></span>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="text-secondary">Amount</span> 
+                                                    <span> {{$product['quantity']}} * &#8377;{{ $product['price']}} = &#8377;{{ (int)$product['quantity'] * (int)$product['price'] }}</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="text-secondary">Total amount</span> 
+                                                    <span class="fw-bold"> &#8377;{{ (int)$product['quantity'] * (int)$product['price'] }}</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach  
-                            @endif
+                                    @endforeach  
+                                @endif
+                            </div>
                         </div>
 
                         <div class="row mb-2">

@@ -94,16 +94,26 @@
                     <br />
                     <span style="white-space: nowrap">✉️ {{ $customer->email}}</span>
                 </td>
-                <td style="width: 40%;">
+                <td style="width: 35%;">
                    
                 </td>
-                <td style="width: 30%; text-align: right; vertical-align: top;">
+                <td style="width: 35%; text-align: right; vertical-align: top;">
                     <span class="fw-bold">Proforma Invoice#</span>
                     &nbsp; &nbsp;
-                    <span>Inv-7</span>
+                    <span>PI-{{$proformaInvoiceNumber}}</span>
                     <br>
                     <span class="fw-bold">Date:</span>
                     {{ $date }}
+                    <br>
+                    @if (!empty($poNo))
+                        <span class="fw-bold">PO#</span>
+                        {{ $poNo }}
+                    @endif
+                    <br>
+                    @if (!empty($dueDate))
+                        <span class="fw-bold">Due Date</span>
+                        {{ $dueDate }}
+                    @endif
                 </td>
             </tr>
         </tbody>

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <livewire:edit-invoice :invoice="$makeInvoice->id"/>
+    <livewire:edit-proforma :invoice="$makeInvoice->id"/>
     <livewire:customer-list />
     <livewire:product-list :componentName="'Invoice'"/>
     @if ($makeInvoice->otherCharge)   
@@ -11,12 +11,12 @@
         <livewire:other-charges/>
     @endif
     @if ($makeInvoice->paidInfos)   
-        @php $ids =$makeInvoice->paidInfos->pluck('id'); @endphp
+        @php $ids = $makeInvoice->paidInfos->pluck('id'); @endphp
         <livewire:paid-info  :paidInfoIds="$ids"/>
     @else
         <livewire:paid-info />
     @endif
-    <livewire:terms-list :termName="'invoice'" :id="$makeInvoice->id" :componentName="'Quotation'"/>
+    <livewire:terms-list :termName="'invoice'" :id="$makeInvoice->id" :componentName="'Proforma Invoice'"/>
 </div>
 @endsection
 @section('script')

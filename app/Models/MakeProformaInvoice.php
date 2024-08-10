@@ -8,4 +8,28 @@ use Illuminate\Database\Eloquent\Model;
 class MakeProformaInvoice extends Model
 {
     use HasFactory;
+
+    public function otherCharge()
+    {
+        return $this->morphOne(OtherCharge::class, 'chargeable');
+    }
+
+    public function paidInfos()
+    {
+        return $this->morphMany(PaidInfo::class, 'info');
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(CustomerModel::class, 'customer_id', 'id');
+    }
+
+    public function proformaInvoiceProducts() {
+        return $this->hasMany(ProformaInvoiceProduct::class, 'proforma_invoice_id', 'id');
+    }
+
+    public function terms()
+    {
+        return $this->belongsToMany(TermsModel::class, 'proforma_terms', 'proforma_invoice_id', 'term_id');
+    }
 }
