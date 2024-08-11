@@ -61,6 +61,15 @@ class MakeDeliveryNoteController extends Controller
      */
     public function destroy(MakeDeliveryNote $makeDeliveryNote)
     {
-        //
+        $user = auth()->user();
+        if($makeDeliveryNote->created_by != $user->id ) {
+            return abort(403, 'Unauthorized');
+        }
+        try {
+            $makeDeliveryNote->delete();
+            return response()->json(['message' => 'Invoice Deleted Sucessfully'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Something went wrong'], 400);
+        }
     }
 }

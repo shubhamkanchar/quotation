@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Str;
 class MakeDeliveryNote extends Model
 {
     use HasFactory;
@@ -26,5 +26,19 @@ class MakeDeliveryNote extends Model
     public function otherInfos()
     {
         return $this->morphMany(OtherInfo::class, 'info');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($quotation) {
+            $quotation->uuid = (string) Str::uuid();
+        });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'uuid';
     }
 }

@@ -88,6 +88,8 @@ class MakeDeliveryNotes extends Component
         $lastDeliveryNote = MakeDeliveryNote::query()->orderBy('order_no', 'desc')->first();
         $deliveryNotes = new MakeDeliveryNote();
         $deliveryNotes->customer_id = $customer?->id;
+        $deliveryNotes->created_by = $this->user->id;
+        $deliveryNotes->business_id = $this->user->business->id;
         $deliveryNotes->order_no = !is_null($lastDeliveryNote?->order_no) ? ($lastDeliveryNote?->order_no +1) : 1;
         $deliveryNotes->delivery_date = $date;
         $deliveryNotes->reference_no = $referenceNo;
@@ -108,7 +110,7 @@ class MakeDeliveryNotes extends Component
         $termIds = array_keys($terms);
         $deliveryNotes->terms()->sync($termIds);
 
-        $route = route('make-delivery-note.edit', $deliveryNotes->id);
+        $route = route('make-delivery-note.edit', $deliveryNotes->uuid);
         $this->dispatch('deliveryNoteCreated', $route);
     }
 

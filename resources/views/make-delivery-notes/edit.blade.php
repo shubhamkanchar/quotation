@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <livewire:edit-delivery-notes :deliveryNote="$makeDeliveryNote->id" />
+    <livewire:edit-delivery-notes :deliveryNote="$makeDeliveryNote->uuid" />
     <livewire:customer-list />
     <livewire:product-list :componentName="'Delivery Notes'"/>
     <livewire:terms-list :id="$makeDeliveryNote->id" :termName="'invoice'" :componentName="'Delivery Notes'"/> />

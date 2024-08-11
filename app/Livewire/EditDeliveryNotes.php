@@ -65,7 +65,7 @@ class EditDeliveryNotes extends Component
 
     public function addProducts($products) {
         foreach($products as $deliveryProduct) {
-            $product = ProductModel::firstWhere('id', $deliveryProduct->product_id)->toArray();
+            $product = ProductModel::withTrashed()->firstWhere('id', $deliveryProduct->product_id)->toArray();
             $data = ['product' => $product, 'quantity' => $deliveryProduct->quantity, 'price' => $deliveryProduct->price, 'description' => $deliveryProduct->description];
             $this->addProduct($data, $deliveryProduct->sort_order);
         }
@@ -108,6 +108,8 @@ class EditDeliveryNotes extends Component
         $this->savedDeliveryNote->customer_id = $customer?->id;
         $this->savedDeliveryNote->delivery_date = $date;
         $this->savedDeliveryNote->reference_no = $referenceNo;
+        $this->savedDeliveryNote->created_by = $this->user->id;
+        $this->savedDeliveryNote->business_id = $this->user->business->id;
         $this->savedDeliveryNote->update();
         $this->savedDeliveryNote->deliveryProducts()->delete();
         foreach($products as $key => $product) {
