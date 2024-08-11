@@ -19,14 +19,6 @@ return new class extends Migration
                 $table->uuid('uuid')->unique()->after('id');
             }
         });
-        
-        Schema::table('make_quotations', function (Blueprint $table) {
-            $quotations = MakeQuotation::whereNull('uuid')->orWhere('uuid', '')->get();
-            foreach ($quotations as $quotation) {
-                $quotation->uuid = (string) Str::uuid();
-                $quotation->update();
-            }
-        });
     }
 
     /**
