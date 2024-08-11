@@ -78,7 +78,8 @@ class ProductModelController extends Controller
         $product->hsn = $request->hsn;
         if($product->save()){
             return response()->json([
-                'message' => 'Product updated successfully'
+                'message' => 'Product updated successfully',
+                'route' => route('product.index')
             ],200);
         }else{
             return response()->json([

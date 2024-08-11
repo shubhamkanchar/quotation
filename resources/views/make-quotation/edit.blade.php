@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-    <livewire:edit-quotation :quotation="$makeQuotation->id"/>
+    <livewire:edit-quotation :quotation="$makeQuotation->uuid"/>
     <livewire:customer-list />
     <livewire:product-list :componentName="'Invoice'"/>
     @if ($makeQuotation->otherCharge)   

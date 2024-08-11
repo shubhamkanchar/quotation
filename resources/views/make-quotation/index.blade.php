@@ -31,9 +31,11 @@
 @endsection
 @section('script')
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
-    <script>
+    <script type="module">
         $(document).ready(function() {
             $(document).on('click', '.delete-quotation', function() {
+                let route =  "{{ route('make-quotation.destroy', ':id') }}".replace(':id', $(this).data('id'));
+                
                 Swal.fire({
                     title: "Are you sure?",
                     text: "You won't be able to revert this!",
@@ -44,7 +46,32 @@
                     confirmButtonText: "Yes, delete it!"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        
+                        $.ajax({
+                            url: route,
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            type: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(res) {
+                                $('#quotation-table').DataTable().draw(false);
+                                Swal.fire({
+                                    title: "Success",
+                                    text: res.message,
+                                    icon: "success"
+                                });
+                            },
+                            error: function(error) {
+                                console.log(error);
+                                Swal.fire({
+                                    title: "Error",
+                                    text: error.responseJSON.message,
+                                    icon: "error"
+                                });
+                            }
+                        })
                     }
                 });
             })

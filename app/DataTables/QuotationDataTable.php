@@ -37,7 +37,7 @@ class QuotationDataTable extends DataTable
                 return '-';
             })
             ->addColumn('action', function($row){
-                return '<a href="'.route('make-quotation.edit',$row->id).'" class="btn btn-primary me-2" >Edit</a><button class="btn btn-danger delete-quotation" data-id="'.$row->id.'">Delete</button>';
+                return '<a href="'.route('make-quotation.edit',$row->uuid).'" class="btn btn-primary me-2" >Edit</a><button class="btn btn-danger delete-quotation" data-id="'.$row->uuid.'">Delete</button>';
             })
             ->setRowId('id');
     }
@@ -47,7 +47,9 @@ class QuotationDataTable extends DataTable
      */
     public function query(MakeQuotation $model): QueryBuilder
     {
+        $user = auth()->user();
         return $model->newQuery()
+        ->where('created_by', $user->id)
         ->join('customer_models', 'make_quotations.customer_id', '=', 'customer_models.id')
         ->select('make_quotations.*', 'customer_models.name as customer_name');
     }

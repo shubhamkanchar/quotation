@@ -37,7 +37,8 @@ class CustomersDataTable extends DataTable
      */
     public function query(CustomerModel $model): QueryBuilder
     {
-        return $model->newQuery();
+        $user = auth()->user();
+        return $model->where('user_id', $user->id)->newQuery();
     }
 
     /**

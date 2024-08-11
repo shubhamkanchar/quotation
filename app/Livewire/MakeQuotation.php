@@ -126,6 +126,8 @@ class MakeQuotation extends Component
         $lastQuotation = Quotation::query()->orderBy('quotation_no', 'desc')->first();
         $quotation = new Quotation();
         $quotation->customer_id = $customer?->id;
+        $quotation->created_by = $this->user->id;
+        $quotation->business_id = $this->user->business->id;
         $quotation->quotation_no = !is_null($lastQuotation?->quotation_no) ? ($lastQuotation?->quotation_no +1) : 1;
         $quotation->total_amount = $totalAmount;
         $quotation->quotation_date = $date;
@@ -158,7 +160,7 @@ class MakeQuotation extends Component
         
         $termIds = array_keys($terms);
         $quotation->terms()->sync($termIds);
-        $route = route('make-quotation.edit', $quotation->id);
+        $route = route('make-quotation.edit', $quotation->uuid);
         $this->dispatch('quotationCreated', $route);
     }
 

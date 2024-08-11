@@ -33,7 +33,8 @@ class TermsModelController extends Controller
         $terms->user_id = Auth::user()->id;
         if($terms->save()){
             return response()->json([
-                'message' => 'Terms added successfully'
+                'message' => 'Terms added successfully',
+                'route' => route('term.index')
             ],200);
         }else{
             return response()->json([
@@ -84,7 +85,12 @@ class TermsModelController extends Controller
      */
     public function destroy(Request $request)
     {
-        $terms = TermsModel::whereId($request->term)->delete();
+        $user = auth()->user();
+        $terms = TermsModel::whereId($request->term)->first();
+        if($terms->user_id != $user->id ) {
+            return abort(403, 'Unauthorized');
+        }
+        $terms->delete();
         if($terms){
             return response()->json([
                 'message' => 'Terms Deleted successfully'

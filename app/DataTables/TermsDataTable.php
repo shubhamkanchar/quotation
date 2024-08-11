@@ -37,7 +37,8 @@ class TermsDataTable extends DataTable
      */
     public function query(TermsModel $model): QueryBuilder
     {
-        return $model->newQuery();
+        $user = auth()->user();
+        return $model->where('user_id', $user->id)->newQuery();
     }
 
     /**

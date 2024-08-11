@@ -37,7 +37,8 @@ class ProductDataTable extends DataTable
      */
     public function query(ProductModel $model): QueryBuilder
     {
-        return $model->newQuery();
+        $user = auth()->user();
+        return $model->where('user_id', $user->id)->newQuery();
     }
 
     /**

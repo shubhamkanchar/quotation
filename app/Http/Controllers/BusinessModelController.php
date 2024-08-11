@@ -14,7 +14,12 @@ class BusinessModelController extends Controller
      */
     public function index(BusinessDataTable $dataTable)
     {
-        return $dataTable->render('business.index');
+        $user = auth()->user();
+        if($user->business) {
+            return redirect()->route('business.edit', $user->business->id);
+        }
+        return redirect()->route('business.create');
+        // return $dataTable->render('business.index');
     }
 
     /**

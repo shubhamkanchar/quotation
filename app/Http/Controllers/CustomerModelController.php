@@ -44,7 +44,8 @@ class CustomerModelController extends Controller
         $customer->shipping_address = $request->shipping_address;
         if($customer->save()){
             return response()->json([
-                'message' => 'Customer added successfully'
+                'message' => 'Customer added successfully',
+                'route' => route('customer.index')
             ],200);
         }else{
             return response()->json([

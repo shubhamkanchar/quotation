@@ -24,7 +24,7 @@
 
                         {{ $dataTable->table() }}
                     </div>
-                    <form id="deleteCustomer">
+                    <form id="deleteTerms">
                         <input type="hidden" name="token" id="token" value="{{ auth()?->user()?->createToken('api')->plainTextToken }}">
                         @method('DELETE')
                     </form>
@@ -48,10 +48,10 @@
                     confirmButtonText: "Yes, delete it!"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        let myform = document.getElementById("deleteCustomer");
+                        let myform = document.getElementById("deleteTerms");
                         let fd = new FormData(myform);
                         $.ajax({
-                            url: "{{ url('api/customer') }}/"+$(this).data('id'),
+                            url: "{{ url('api/term') }}/"+$(this).data('id'),
                             data: fd,
                             cache: false,
                             processData: false,
@@ -66,6 +66,7 @@
                                     text: res.message,
                                     icon: "success"
                                 });
+                                $('#terms-table').DataTable().draw(false);
                             },
                             error: function(error) {
                                 console.log(error);

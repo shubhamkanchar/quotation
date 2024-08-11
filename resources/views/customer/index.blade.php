@@ -66,6 +66,7 @@
                                     text: res.message,
                                     icon: "success"
                                 });
+                                $('#customers-table').DataTable().draw(false);
                             },
                             error: function(error) {
                                 console.log(error);

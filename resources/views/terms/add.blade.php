@@ -65,6 +65,8 @@
                             title: "Success",
                             text: res.message,
                             icon: "success"
+                        }).then(function() {
+                            window.location.href = res.route;
                         });
                     },
                     error:function(error){

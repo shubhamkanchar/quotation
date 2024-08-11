@@ -68,6 +68,11 @@ class MakeQuotationController extends Controller
      */
     public function destroy(MakeQuotation $makeQuotation)
     {
-        //
+        $user = auth()->user();
+        if($makeQuotation->created_by != $user->id ) {
+            return abort(403, 'Unauthorized');
+        }
+        $makeQuotation->delete();
+        return response()->json(['message' => 'Quotation Deleted Sucessfully'], 200);
     }
 }
