@@ -48,9 +48,9 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="phone" class="col-md-4 col-form-label text-md-end">{{ __('Phone Number') }}</label>
+                            <label for="phone" class="col-md-4 col-form-label text-md-end">{{ __('Mobile Number') }}</label>
                             <div class="col-md-6">
-                                <input id="phone" type="number" class="form-control " name="number"  value="{{ old('number') ?? $businessModel->number  }}" required autocomplete="phone">
+                                <input id="phone" type="tel" class="form-control " name="number"  value="{{ old('number') ?? $businessModel->number  }}" required autocomplete="phone">
                             </div>
                         </div>
                         
@@ -150,8 +150,18 @@
         $(document).ready(function() {
             $(document).on('submit', '#updateBusiness', function(e) {
                 e.preventDefault();
+                if (!iti.isValidNumber()) {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Please enter a valid phone number.",
+                        icon: "error"
+                    });
+                    return; // Stop form submission
+                }
+
                 let myform = document.getElementById("updateBusiness");
                 let fd = new FormData(myform);
+                fd.append('full_number', iti.getNumber());
                 $.ajax({
                     url: "{{ route('api.business.update',$businessModel->id) }}",
                     data: fd,
@@ -179,6 +189,55 @@
                     }
                 })
             })
+
+            const input = document.querySelector("#phone");
+            const iti = window.intlTelInput(input, {
+                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.8.1/build/js/utils.js",
+            });
+
+            $('#phone').on('keypress', function(e) {
+                const keyCode = e.keyCode || e.which;
+                const keyValue = String.fromCharCode(keyCode);
+                const regex = /^[0-9+\-() ]+$/;
+
+                if (!regex.test(keyValue)) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            $('#phone').on('change', function() {
+                if (iti.isValidNumber()) {
+                    $(this).removeClass('is-invalid');
+                    $('#phoneError').text('');
+                    $('#submitBtn').prop('disabled', false);
+                } else {
+                    $(this).addClass('is-invalid');
+                    $('#submitBtn').prop('disabled', true);
+
+                    const errorCode = iti.getValidationError();
+                    let errorMessage = "Invalid phone number";
+
+                    switch (errorCode) {
+                        case 1:
+                            errorMessage = "Invalid country code";
+                            break;
+                        case 2:
+                            errorMessage = "Too short";
+                            break;
+                        case 3:
+                            errorMessage = "Too long";
+                            break;
+                        case 4:
+                            errorMessage = "Invalid number";
+                            break;
+                        default:
+                            errorMessage = "Invalid phone number";
+                    }
+
+                    $('#phoneError').text(errorMessage);
+                }
+            });
         })
     </script>
 @endsection

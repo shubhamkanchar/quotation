@@ -27,6 +27,10 @@ class BusinessModelController extends Controller
      */
     public function create()
     {
+        $user = auth()->user();
+        if($user->business) {
+            return redirect()->route('business.edit', $user->business->id);
+        }
         return view('business.add');
     }
 
@@ -48,7 +52,7 @@ class BusinessModelController extends Controller
         $business->contact_name = $request->contact_name;
         $business->email = $request->email;
         $business->user_id = Auth::user()->id;
-        $business->number = $request->number;
+        $business->number = $request->full_number;
         $business->address_1 = $request->address_1;
         $business->address_2 = $request->address_2;
         $business->address_3 = $request->address_3;
@@ -64,7 +68,8 @@ class BusinessModelController extends Controller
         $business->signature = $signature;
         if($business->save()){
             return response()->json([
-                'message' => 'Business added successfully'
+                'message' => 'Business added successfully',
+                'route' => route('business.edit', $business->id)
             ],200);
         }else{
             return response()->json([
@@ -112,7 +117,7 @@ class BusinessModelController extends Controller
         $business->contact_name = $request->contact_name;
         $business->email = $request->email;
         $business->user_id = Auth::user()->id;
-        $business->number = $request->number;
+        $business->number = $request->full_number;
         $business->address_1 = $request->address_1;
         $business->address_2 = $request->address_2;
         $business->address_3 = $request->address_3;
