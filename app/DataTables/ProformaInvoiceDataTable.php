@@ -38,7 +38,7 @@ class ProformaInvoiceDataTable extends DataTable
             return '-';
         })
         ->addColumn('action', function($row){
-            return '<a href="'.route('make-proforma-invoice.edit',$row->id).'" class="btn btn-primary me-2" >Edit</a><button class="btn btn-danger delete-proforma-invoice" data-id="'.$row->id.'">Delete</button>';
+            return '<a href="'.route('make-proforma-invoice.edit',$row->uuid).'" class="btn btn-primary me-2" >Edit</a><button class="btn btn-danger delete-proforma" data-id="'.$row->uuid.'">Delete</button>';
         })
         ->setRowId('id');
     }
@@ -48,7 +48,9 @@ class ProformaInvoiceDataTable extends DataTable
      */
     public function query(MakeProformaInvoice $model): QueryBuilder
     {
+        $user = auth()->user();
         return $model->newQuery()
+        ->where('created_by', $user->id)
         ->join('customer_models', 'make_proforma_invoices.customer_id', '=', 'customer_models.id')
         ->select('make_proforma_invoices.*', 'customer_models.name as customer_name');
     }

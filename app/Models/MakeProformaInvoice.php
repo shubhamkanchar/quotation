@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class MakeProformaInvoice extends Model
 {
@@ -31,5 +32,20 @@ class MakeProformaInvoice extends Model
     public function terms()
     {
         return $this->belongsToMany(TermsModel::class, 'proforma_terms', 'proforma_invoice_id', 'term_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Automatically generate a UUID for the quotation
+        static::creating(function ($quotation) {
+            $quotation->uuid = (string) Str::uuid();
+        });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'uuid';
     }
 }

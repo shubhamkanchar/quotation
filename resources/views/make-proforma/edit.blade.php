@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <livewire:edit-proforma :invoice="$makeProformaInvoice->id"/>
+    <livewire:edit-proforma :invoice="$makeProformaInvoice->uuid"/>
     <livewire:customer-list />
     <livewire:product-list :componentName="'Proforma Invoice'"/>
     @if ($makeProformaInvoice->otherCharge)   

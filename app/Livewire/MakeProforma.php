@@ -161,6 +161,9 @@ class MakeProforma extends Component
         $proformaInvoice->proforma_invoice_date = $date;
         $proformaInvoice->due_date = $dueDate;
         $proformaInvoice->po_no = $poNo;
+        $proformaInvoice->due_date = $dueDate;
+        $proformaInvoice->created_by = $this->user->id;
+        $proformaInvoice->business_id = $this->user->business->id;
         $proformaInvoice->round_off = $this->round_off ? 1: 0;
         $proformaInvoice->save();
         $proformaInvoiceNumber = $proformaInvoice->proforma_invoice_no;
@@ -200,13 +203,10 @@ class MakeProforma extends Component
 
         $termIds = array_keys($terms);
         $proformaInvoice->terms()->sync($termIds);
-        $route = route('make-proforma.edit', $proformaInvoice->id);
+        $route = route('make-proforma-invoice.edit', $proformaInvoice->uuid);
         $this->dispatch('ProformaInvoiceCreated', $route);
 
         $pdf = Pdf::loadView('make-proforma\pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'poNo','dueDate','totalAmount', 'amountInWord', 'paidAmount', 'proformaInvoiceNumber'));
-        return response()->streamDownload(function () use ($pdf) {
-           echo  $pdf->stream();
-        }, 'pi_invoice.pdf');
     }
     public function render()
     {

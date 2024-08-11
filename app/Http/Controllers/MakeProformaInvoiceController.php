@@ -62,6 +62,15 @@ class MakeProformaInvoiceController extends Controller
      */
     public function destroy(MakeProformaInvoice $makeProformaInvoice)
     {
-        //
+        $user = auth()->user();
+        if($makeProformaInvoice->created_by != $user->id ) {
+            return abort(403, 'Unauthorized');
+        }
+        try {
+            $makeProformaInvoice->delete();
+            return response()->json(['message' => 'Proforma Invoice Deleted Sucessfully'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Something went wrong'], 400);
+        }
     }
 }

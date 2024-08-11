@@ -79,11 +79,11 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between">
                                                     <span class="text-secondary">Amount</span> 
-                                                    <span> {{$product['quantity']}} * &#8377;{{ $product['price']}} = &#8377;{{ (int)$product['quantity'] * (int)$product['price'] }}</span>
+                                                    <span> {{$product['quantity']}} * &#8377;{{ $product['price']}} = &#8377;{{ (float)$product['quantity'] * (float)$product['price'] }}</span>
                                                 </div>
                                                 <div class="d-flex justify-content-between">
                                                     <span class="text-secondary">Total amount</span> 
-                                                    <span class="fw-bold"> &#8377;{{ (int)$product['quantity'] * (int)$product['price'] }}</span>
+                                                    <span class="fw-bold"> &#8377;{{ (float)$product['quantity'] * (float)$product['price'] }}</span>
                                                 </div>
                                             </div>
                                         </div>
