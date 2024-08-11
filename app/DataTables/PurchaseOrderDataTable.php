@@ -37,7 +37,7 @@ class PurchaseOrderDataTable extends DataTable
                 return '-';
             })
             ->addColumn('action', function($row){
-                return '<a href="'.route('make-purchase-order.edit',$row->id).'" class="btn btn-primary me-2" >Edit</a><button class="btn btn-danger delete-purchase-order" data-id="'.$row->id.'">Delete</button>';
+                return '<a href="'.route('make-purchase-order.edit',$row->uuid).'" class="btn btn-primary me-2" >Edit</a><button class="btn btn-danger delete-purchase-order" data-id="'.$row->uuid.'">Delete</button>';
             })
             ->setRowId('id');
     }
@@ -47,7 +47,9 @@ class PurchaseOrderDataTable extends DataTable
      */
     public function query(MakePurchaseOrder $model): QueryBuilder
     {
+        $user = auth()->user();
         return $model->newQuery()
+        ->where('created_by', $user->id)
         ->join('customer_models', 'make_purchase_orders.customer_id', '=', 'customer_models.id')
         ->select('make_purchase_orders.*', 'customer_models.name as customer_name');
     }

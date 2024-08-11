@@ -39,8 +39,8 @@ class MakePurchaseOrder extends Component
     public function addCharges($data) {
         $this->otherCharges = $data;
         if($this->otherCharges['is_taxable']) {
-            $other_charge_amount = (int) $this->otherCharges['other_charge_amount'];
-            $gst_percentage = (int) $this->otherCharges['gst_percentage'];    
+            $other_charge_amount = (float) $this->otherCharges['other_charge_amount'];
+            $gst_percentage = (float) $this->otherCharges['gst_percentage'];    
             $gst_amount = ($other_charge_amount * $gst_percentage) / (100);
             $this->otherCharges['gst_amount'] = $gst_amount;
         }
@@ -75,10 +75,10 @@ class MakePurchaseOrder extends Component
     public function calculateTotal() {
         $this->totalAmount = 0;
         foreach($this->addedProducts as $product) {
-            $this->totalAmount += (int) $product['quantity'] * (int) $product['price'];
+            $this->totalAmount += (float) $product['quantity'] * (float) $product['price'];
         }
         if($this->otherCharges) {
-            $this->totalAmount += (int) $this->otherCharges['other_charge_amount'];
+            $this->totalAmount += (float) $this->otherCharges['other_charge_amount'];
             if($this->otherCharges['is_taxable']) {
                 $this->totalAmount += $this->otherCharges['gst_amount'];
             } 
@@ -130,6 +130,8 @@ class MakePurchaseOrder extends Component
         $purchaseOrder->purchase_order_no = !is_null($lastPurchase?->purchase_order_no) ? ($lastPurchase?->purchase_order_no +1) : 1;
         $purchaseOrder->total_amount = $totalAmount;
         $purchaseOrder->purchase_date = $date;
+        $purchaseOrder->created_by = $this->user->id;
+        $purchaseOrder->business_id = $this->user->business->id;
         $purchaseOrder->round_off = $this->round_off ? 1: 0;
         $purchaseOrder->save();
         $purchaseNumber = $purchaseOrder->purchase_order_no;
@@ -159,7 +161,7 @@ class MakePurchaseOrder extends Component
         
         $termIds = array_keys($terms);
         $purchaseOrder->terms()->sync($termIds);
-        $route = route('make-purchase-order.edit', $purchaseOrder->id);
+        $route = route('make-purchase-order.edit', $purchaseOrder->uuid);
         $this->dispatch('purchaseOrderCreated', $route);
     }
     public function render()

@@ -62,6 +62,15 @@ class MakePurchaseOrderController extends Controller
      */
     public function destroy(MakePurchaseOrder $makePurchaseOrder)
     {
-        //
+        $user = auth()->user();
+        if($makePurchaseOrder->created_by != $user->id ) {
+            return abort(403, 'Unauthorized');
+        }
+        try {
+            $makePurchaseOrder->delete();
+            return response()->json(['message' => 'Proforma Invoice Deleted Sucessfully'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Something went wrong'], 400);
+        }
     }
 }

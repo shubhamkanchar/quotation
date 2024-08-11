@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <livewire:edit-purchase-order :purchaseOrder="$makePurchaseOrder->id"/>
+    <livewire:edit-purchase-order :purchaseOrder="$makePurchaseOrder->uuid"/>
     <livewire:customer-list />
     <livewire:product-list :componentName="'Purchase Order'"/>
     @if ($makePurchaseOrder->otherCharge)   

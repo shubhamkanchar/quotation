@@ -42,8 +42,8 @@ class EditPurchaseOrder extends Component
     public function addCharges($data) {
         $this->otherCharges = $data;
         if($this->otherCharges['is_taxable']) {
-            $other_charge_amount = (int) $this->otherCharges['other_charge_amount'];
-            $gst_percentage = (int) $this->otherCharges['gst_percentage'];    
+            $other_charge_amount = (float) $this->otherCharges['other_charge_amount'];
+            $gst_percentage = (float) $this->otherCharges['gst_percentage'];    
             $gst_amount = ($other_charge_amount * $gst_percentage) / (100);
             $this->otherCharges['gst_amount'] = $gst_amount;
         }
@@ -98,7 +98,7 @@ class EditPurchaseOrder extends Component
 
     public function addProducts($products) {
         foreach($products as $quotationProduct) {
-            $product = ProductModel::firstWhere('id', $quotationProduct->product_id)->toArray();
+            $product = ProductModel::withTrashed()->firstWhere('id', $quotationProduct->product_id)->toArray();
             $data = ['product' => $product, 'quantity' => $quotationProduct->quantity, 'price' => $quotationProduct->price, 'description' => $quotationProduct->description];
             $this->addProduct($data, $quotationProduct->sort_order);
         }
@@ -107,10 +107,10 @@ class EditPurchaseOrder extends Component
     public function calculateTotal() {
         $this->totalAmount = 0;
         foreach($this->addedProducts as $product) {
-            $this->totalAmount += (int) $product['quantity'] * (int) $product['price'];
+            $this->totalAmount += (float) $product['quantity'] * (float) $product['price'];
         }
         if($this->otherCharges) {
-            $this->totalAmount += (int) $this->otherCharges['other_charge_amount'];
+            $this->totalAmount += (float) $this->otherCharges['other_charge_amount'];
             if($this->otherCharges['is_taxable']) {
                 $this->totalAmount += $this->otherCharges['gst_amount'];
             } 
@@ -182,6 +182,8 @@ class EditPurchaseOrder extends Component
         $this->savedPurchaseOrder->total_amount = $totalAmount;
         $this->savedPurchaseOrder->purchase_date = $date;
         $this->savedPurchaseOrder->round_off = $this->round_off ? 1: 0;
+        $this->savedPurchaseOrder->created_by = $this->user->id;
+        $this->savedPurchaseOrder->business_id = $this->user->business->id;
         $this->savedPurchaseOrder->save();
         $purchaseNumber = $this->savedPurchaseOrder->purchase_order_no;
         $this->savedPurchaseOrder->purchaseOrderProducts()->delete();
