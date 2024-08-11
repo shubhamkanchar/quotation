@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Quotation Product</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add {{$this->componentName}} Product</h1>
                 <button type="button" id="productModalClose" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="overflow-y: auto; max-height: 50vh;" >

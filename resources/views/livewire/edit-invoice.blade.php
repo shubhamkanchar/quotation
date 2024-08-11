@@ -11,6 +11,11 @@
                                 <input type="date" class="form-control" id="InvoiceDate" wire:model="invoice_date">
                             </div>
                             <div class="ms-2">
+                                <span >Due date</span>
+                                <br>
+                                <input type="date" class="form-control" id="dueDate" wire:model="due_date">  
+                            </div>
+                            <div class="ms-2">
                                 <span>P.O. Number </span>
                                 <br>
                                 <input type="text" class="form-control" id="PoNO" wire:model="po_no">

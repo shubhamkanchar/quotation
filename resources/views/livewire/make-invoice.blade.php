@@ -12,6 +12,11 @@
                                     <input type="date" class="form-control" id="InvoiceDate" wire:model="invoice_date">
                                 </div>
                                 <div class="ms-2">
+                                    <span >Due date</span>
+                                    <br>
+                                    <input type="date" class="form-control" id="dueDate" wire:model="due_date">  
+                                </div>
+                                <div class="ms-2">
                                     <span>P.O. Number </span>
                                     <br>
                                     <input type="text" class="form-control" id="PoNO" wire:model="po_no">
@@ -73,11 +78,11 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between">
                                                     <span class="text-secondary">Amount</span> 
-                                                    <span> {{$product['quantity']}} * &#8377;{{ $product['price']}} = &#8377;{{ (int)$product['quantity'] * (int)$product['price'] }}</span>
+                                                    <span> {{$product['quantity']}} * &#8377;{{ $product['price']}} = &#8377;{{ (float) $product['quantity'] * (float)$product['price'] }}</span>
                                                 </div>
                                                 <div class="d-flex justify-content-between">
                                                     <span class="text-secondary">Total amount</span> 
-                                                    <span class="fw-bold"> &#8377;{{ (int)$product['quantity'] * (int)$product['price'] }}</span>
+                                                    <span class="fw-bold"> &#8377;{{ (float)$product['quantity'] * (float)$product['price'] }}</span>
                                                 </div>
                                             </div>
                                         </div>

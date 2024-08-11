@@ -72,7 +72,12 @@ class MakeQuotationController extends Controller
         if($makeQuotation->created_by != $user->id ) {
             return abort(403, 'Unauthorized');
         }
-        $makeQuotation->delete();
-        return response()->json(['message' => 'Quotation Deleted Sucessfully'], 200);
+        try {
+            $makeQuotation->delete();
+            return response()->json(['message' => 'Quotation Deleted Sucessfully'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Something went wrong'], 400);
+        }
+       
     }
 }

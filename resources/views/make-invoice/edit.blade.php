@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <livewire:edit-proforma :invoice="$makeInvoice->id"/>
+    <livewire:edit-invoice :invoice="$makeInvoice->uuid"/>
     <livewire:customer-list />
     <livewire:product-list :componentName="'Invoice'"/>
     @if ($makeInvoice->otherCharge)   
@@ -16,7 +16,7 @@
     @else
         <livewire:paid-info />
     @endif
-    <livewire:terms-list :termName="'invoice'" :id="$makeInvoice->id" :componentName="'Proforma Invoice'"/>
+    <livewire:terms-list :termName="'invoice'" :id="$makeInvoice->id" :componentName="'Invoice'"/>
 </div>
 @endsection
 @section('script')

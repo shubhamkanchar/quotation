@@ -118,7 +118,7 @@ class EditProforma extends Component
 
     public function addProducts($products) {
         foreach($products as $invoiceProduct) {
-            $product = ProductModel::firstWhere('id', $invoiceProduct->product_id)->toArray();
+            $product = ProductModel::withTrashed()->firstWhere('id', $invoiceProduct->product_id)->toArray();
             $data = ['product' => $product, 'quantity' => $invoiceProduct->quantity, 'price' => $invoiceProduct->price, 'description' => $invoiceProduct->description];
             $this->addProduct($data, $invoiceProduct->sort_order);
         }

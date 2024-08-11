@@ -111,6 +111,11 @@
                         <span class="fw-bold">PO#</span>
                         {{ $poNo }}
                     @endif
+                    <br>
+                    @if (!empty($dueDate))
+                        <span class="fw-bold">Due Date</span>
+                        {{ $dueDate }}
+                    @endif
                 </td>
             </tr>
         </tbody>

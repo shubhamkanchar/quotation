@@ -62,6 +62,15 @@ class MakeInvoiceController extends Controller
      */
     public function destroy(MakeInvoice $makeInvoice)
     {
-        //
+        $user = auth()->user();
+        if($makeInvoice->created_by != $user->id ) {
+            return abort(403, 'Unauthorized');
+        }
+        try {
+            $makeInvoice->delete();
+            return response()->json(['message' => 'Invoice Deleted Sucessfully'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Something went wrong'], 400);
+        }
     }
 }

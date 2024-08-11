@@ -19,6 +19,7 @@ class MakeInvoice extends Component
     public $totalAmount = 0;
     public $paidAmount = 0;
     public $invoice_date;
+    public $due_date;
     public $po_no = null;
     public $addedCustomer;
     public $addedProducts = [];
@@ -55,8 +56,8 @@ class MakeInvoice extends Component
     public function addCharges($data) {
         $this->otherCharges = $data;
         if($this->otherCharges['is_taxable']) {
-            $other_charge_amount = (int) $this->otherCharges['other_charge_amount'];
-            $gst_percentage = (int) $this->otherCharges['gst_percentage'];    
+            $other_charge_amount = (float) $this->otherCharges['other_charge_amount'];
+            $gst_percentage = (float) $this->otherCharges['gst_percentage'];    
             $gst_amount = ($other_charge_amount * $gst_percentage) / (100);
             $this->otherCharges['gst_amount'] = $gst_amount;
         }
@@ -91,10 +92,10 @@ class MakeInvoice extends Component
     public function calculateTotal() {
         $this->totalAmount = 0;
         foreach($this->addedProducts as $product) {
-            $this->totalAmount += (int) $product['quantity'] * (int) $product['price'];
+            $this->totalAmount += (float) $product['quantity'] * (float) $product['price'];
         }
         if($this->otherCharges) {
-            $this->totalAmount += (int) $this->otherCharges['other_charge_amount'];
+            $this->totalAmount += (float) $this->otherCharges['other_charge_amount'];
             if($this->otherCharges['is_taxable']) {
                 $this->totalAmount += $this->otherCharges['gst_amount'];
             } 
@@ -143,6 +144,7 @@ class MakeInvoice extends Component
         $charges = $this->otherCharges;
         $user = $this->user;
         $date = $this->invoice_date;
+        $dueDate = $this->due_date;
         $totalAmount = $this->totalAmount;
         $paidAmount = $this->paidAmount;
         $numberToWords = new NumberToWords();
@@ -157,6 +159,9 @@ class MakeInvoice extends Component
         $invoice->balance_due = $totalAmount;
         $invoice->invoice_date = $date;
         $invoice->po_no = $this->po_no;
+        $invoice->due_date = $dueDate;
+        $invoice->created_by = $this->user->id;
+        $invoice->business_id = $this->user->business->id;
         $invoice->round_off = $this->round_off ? 1: 0;
         $invoice->save();
         $invoiceNumber = $invoice->invoice_no;
@@ -196,7 +201,7 @@ class MakeInvoice extends Component
 
         $termIds = array_keys($terms);
         $invoice->terms()->sync($termIds);
-        $route = route('make-invoice.edit', $invoice->id);
+        $route = route('make-invoice.edit', $invoice->uuid);
         $this->dispatch('invoiceCreated', $route);
     }
     

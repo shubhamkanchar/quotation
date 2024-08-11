@@ -24,7 +24,7 @@ class InvoiceDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
         ->addColumn('invoice_no', function($row) {
-            return 'Invoice-'.$row->quotation_no;
+            return 'Inv-'.$row->invoice_no;
         })
         ->addColumn('customer_id', function($row) {
             return ucfirst($row->customer_name);
@@ -37,7 +37,7 @@ class InvoiceDataTable extends DataTable
             return '-';
         })
         ->addColumn('action', function($row){
-            return '<a href="'.route('make-invoice.edit',$row->id).'" class="btn btn-primary me-2" >Edit</a><button class="btn btn-danger delete-quoinvoicetation" data-id="'.$row->id.'">Delete</button>';
+            return '<a href="'.route('make-invoice.edit',$row->uuid).'" class="btn btn-primary me-2" >Edit</a><button class="btn btn-danger delete-invoice" data-id="'.$row->uuid.'">Delete</button>';
         })
         ->setRowId('id');
     }
@@ -47,7 +47,9 @@ class InvoiceDataTable extends DataTable
      */
     public function query(MakeInvoice $model): QueryBuilder
     {
+        $user = auth()->user();
         return $model->newQuery()
+        ->where('created_by', $user->id)
         ->join('customer_models', 'make_invoices.customer_id', '=', 'customer_models.id')
         ->select('make_invoices.*', 'customer_models.name as customer_name');
     }
