@@ -5,7 +5,9 @@
     <livewire:edit-delivery-notes :deliveryNote="$makeDeliveryNote->uuid" />
     <livewire:customer-list />
     <livewire:product-list :componentName="'Delivery Notes'"/>
-    <livewire:terms-list :id="$makeDeliveryNote->id" :termName="'invoice'" :componentName="'Delivery Notes'"/> />
+    <livewire:terms-list :id="$makeDeliveryNote->id" :termName="'invoice'" :componentName="'Delivery Notes'"/>
+    <x-create-customer-modal />
+    
 </div>
 @endsection
 @section('script')

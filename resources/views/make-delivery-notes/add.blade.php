@@ -6,6 +6,8 @@
     <livewire:customer-list />
     <livewire:product-list :componentName="'Delivery Notes'"/>
     <livewire:terms-list :termName="'invoice'" />
+    <x-create-customer-modal />
+
 </div>
 @endsection
 @section('script')

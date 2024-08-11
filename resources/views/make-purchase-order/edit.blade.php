@@ -11,6 +11,8 @@
         <livewire:other-charges/>
     @endif
     <livewire:terms-list :termName="'Purchase Order'" :id="$makePurchaseOrder->id" :componentName="'Purchase Order'"/>
+    <x-create-customer-modal />
+
 </div>
 @endsection
 @section('script')

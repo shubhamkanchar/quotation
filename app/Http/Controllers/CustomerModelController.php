@@ -35,11 +35,12 @@ class CustomerModelController extends Controller
         $customer->company_name = $request->company_name;
         $customer->email = $request->email;
         $customer->user_id = Auth::user()->id;
-        $customer->number = $request->number;
+        $customer->number = $request->full_number;
         $customer->address_1 = $request->address_1;
         $customer->address_2 = $request->address_2;
         $customer->other_info = $request->other_info;
         $customer->gstin = $request->gstin_number;
+        $customer->country = $request->country;
         $customer->state = $request->state;
         $customer->shipping_address = $request->shipping_address;
         if($customer->save()){
@@ -81,12 +82,13 @@ class CustomerModelController extends Controller
         $customer->company_name = $request->company_name;
         $customer->email = $request->email;
         $customer->user_id = Auth::user()->id;
-        $customer->number = $request->number;
+        $customer->number = $request->full_number;
         $customer->address_1 = $request->address_1;
         $customer->address_2 = $request->address_2;
         $customer->other_info = $request->other_info;
         $customer->gstin = $request->gstin_number;
         $customer->state = $request->state;
+        $customer->country = $request->country;
         $customer->shipping_address = $request->shipping_address;
         if($customer->save()){
             return response()->json([

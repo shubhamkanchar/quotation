@@ -37,7 +37,8 @@ class ProductModelController extends Controller
         $product->hsn = $request->hsn;
         if($product->save()){
             return response()->json([
-                'message' => 'Product added successfully'
+                'message' => 'Product added successfully',
+                'route' => route('product.index')
             ],200);
         }else{
             return response()->json([
@@ -79,7 +80,6 @@ class ProductModelController extends Controller
         if($product->save()){
             return response()->json([
                 'message' => 'Product updated successfully',
-                'route' => route('product.index')
             ],200);
         }else{
             return response()->json([

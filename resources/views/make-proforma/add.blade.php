@@ -8,6 +8,8 @@
     <livewire:other-charges />
     <livewire:paid-info />
     <livewire:terms-list :termName="'invoice'"/>
+    <x-create-customer-modal />
+
 </div>
 @endsection
 @section('script')

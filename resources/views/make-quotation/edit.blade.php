@@ -10,6 +10,8 @@
         <livewire:other-charges/>
     @endif
     <livewire:terms-list :termName="'Quotation'" :id="$makeQuotation->id" :componentName="'Invoice'"/>
+    <x-create-customer-modal />
+    
 </div>
 @endsection
 @section('script')

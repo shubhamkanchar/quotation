@@ -6,6 +6,7 @@
     <livewire:product-list :componentName="'Quotation'"/>
     <livewire:other-charges />
     <livewire:terms-list :termName="'Quotation'"/>
+    <x-create-customer-modal />
 </div>
 @endsection
 @section('script')

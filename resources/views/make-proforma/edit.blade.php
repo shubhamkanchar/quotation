@@ -17,6 +17,8 @@
         <livewire:paid-info />
     @endif
     <livewire:terms-list :termName="'Proforma Invoice'" :id="$makeProformaInvoice->id" :componentName="'Proforma Invoice'"/>
+    <x-create-customer-modal />
+    
 </div>
 @endsection
 @section('script')

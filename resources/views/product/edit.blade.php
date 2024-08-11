@@ -12,28 +12,28 @@
                         @method('PUT')
                         <input type="hidden" name="token" id="token" value="{{ auth()?->user()?->createToken('api')->plainTextToken }}">
                         <div class="row mb-3">
-                            <label for="product_name" class="col-md-4 col-form-label text-md-end">Product name</label>
+                            <label for="product_name" class="col-md-4 col-form-label text-md-end">Product Name<span class="text-danger">*</span></label>
                             <div class="col-md-6">
                                 <input id="product_name" type="text" class="form-control" name="product_name" value="{{ old('product_name') ?? $ProductModel->product_name  }}" required autocomplete="product_name" autofocus >
                             </div>
                         </div>
 
                         <div class="row mb-3">
-                            <label for="price" class="col-md-4 col-form-label text-md-end">Price</label>
+                            <label for="price" class="col-md-4 col-form-label text-md-end">Price<span class="text-danger">*</span></label>
                             <div class="col-md-6">
                                 <input id="price" type="text" class="form-control" name="price" value="{{ old('price') ?? $ProductModel->price }}" required autocomplete="price" autofocus>
                             </div>
                         </div>
 
                         <div class="row mb-3">
-                            <label for="unit" class="col-md-4 col-form-label text-md-end">{{ __('Unit of measure') }}</label>
+                            <label for="unit" class="col-md-4 col-form-label text-md-end">{{ __('Unit of measure')(SET,KG etc..) }}</label>
                             <div class="col-md-6">
                                 <input id="unit" type="unit" class="form-control" name="unit" value="{{ old('unit')?? $ProductModel->unit }}" required autocomplete="unit">
                             </div>
                         </div>
                         
                         <div class="row mb-3">
-                            <label for="tax" class="col-md-4 col-form-label text-md-end">Tax</label>
+                            <label for="tax" class="col-md-4 col-form-label text-md-end">Tax%</label>
                             <div class="col-md-6">
                                 <input id="tax" type="text" class="form-control" name="tax" value="{{ old('tax')?? $ProductModel->tax }}" required autocomplete="tax" autofocus>
                             </div>

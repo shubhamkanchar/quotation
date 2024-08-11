@@ -7,6 +7,8 @@
     <livewire:product-list :componentName="'Purchase Order'"/>
     <livewire:other-charges />
     <livewire:terms-list :termName="'Purchase Order'"/>
+    <x-create-customer-modal />
+
 </div>
 @endsection
 @section('script')

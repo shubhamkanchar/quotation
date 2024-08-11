@@ -24,6 +24,9 @@
                         </div>
                     @endforeach
                 </div>
+                <div class="modal-footer">
+                    <button class="btn bg-danger-subtle rounded-pill" data-bs-toggle="modal" data-bs-target="#createCustomerModal">Add Customer</button>
+                </div>
             </div>
         </div>
     </div>
@@ -31,6 +34,10 @@
 @script
     <script>
         $(document).on('hidden.bs.modal', '#addCustomerModal', function() {
+            @this.call('resetSearch');
+        })
+
+        $(document).on('shown.bs.modal', '#addCustomerModal', function() {
             @this.call('resetSearch');
         })
     </script>
