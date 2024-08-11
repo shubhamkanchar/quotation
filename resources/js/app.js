@@ -12,6 +12,10 @@ import {Modal} from 'bootstrap';
 window.Modal = Modal;
 
 $('.single-select2').select2();
+
+import { Country, State, City }  from 'country-state-city';
+window.Country = Country;
+window.State = State;
 // import { createApp } from 'vue';
 
 /**
