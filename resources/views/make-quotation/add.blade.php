@@ -7,6 +7,7 @@
     <livewire:other-charges />
     <livewire:terms-list :termName="'Quotation'"/>
     <x-create-customer-modal />
+    <x-create-product-modal />
 </div>
 @endsection
 @section('script')

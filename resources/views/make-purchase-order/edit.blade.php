@@ -12,7 +12,7 @@
     @endif
     <livewire:terms-list :termName="'Purchase Order'" :id="$makePurchaseOrder->id" :componentName="'Purchase Order'"/>
     <x-create-customer-modal />
-
+    <x-create-product-modal />
 </div>
 @endsection
 @section('script')

@@ -18,7 +18,7 @@
     @endif
     <livewire:terms-list :termName="'Proforma Invoice'" :id="$makeProformaInvoice->id" :componentName="'Proforma Invoice'"/>
     <x-create-customer-modal />
-    
+    <x-create-product-modal />
 </div>
 @endsection
 @section('script')

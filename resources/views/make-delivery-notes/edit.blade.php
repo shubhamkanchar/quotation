@@ -7,7 +7,7 @@
     <livewire:product-list :componentName="'Delivery Notes'"/>
     <livewire:terms-list :id="$makeDeliveryNote->id" :termName="'invoice'" :componentName="'Delivery Notes'"/>
     <x-create-customer-modal />
-    
+    <x-create-product-modal />
 </div>
 @endsection
 @section('script')

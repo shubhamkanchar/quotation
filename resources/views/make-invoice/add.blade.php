@@ -9,6 +9,7 @@
     <livewire:paid-info />
     <livewire:terms-list :termName="'invoice'"/>
     <x-create-customer-modal />
+    <x-create-product-modal />
 
 </div>
 @endsection

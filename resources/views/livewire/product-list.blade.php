@@ -68,12 +68,20 @@
                     </div>
                 @endif
             </div>
+            @if (!$selectedProduct)
+                <div class="modal-footer">
+                    <button class="btn bg-danger-subtle rounded-pill" data-bs-toggle="modal" data-bs-target="#createProductModal">Add Product</button>
+                </div>
+            @endif
         </div>
     </div>
 </div>
 @script
     <script>
         $(document).on('hidden.bs.modal', '#addProductModal', function() {
+            @this.call('resetProductList');
+        })
+        $(document).on('shown.bs.modal', '#addProductModal', function() {
             @this.call('resetProductList');
         })
     </script>

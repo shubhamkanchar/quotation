@@ -11,7 +11,7 @@
     @endif
     <livewire:terms-list :termName="'Quotation'" :id="$makeQuotation->id" :componentName="'Invoice'"/>
     <x-create-customer-modal />
-    
+    <x-create-product-modal />
 </div>
 @endsection
 @section('script')

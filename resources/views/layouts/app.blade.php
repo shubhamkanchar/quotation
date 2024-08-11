@@ -142,5 +142,6 @@
         </main>
     </div>
     @yield('script')
+    @stack('scripts')
 </body>
 </html>

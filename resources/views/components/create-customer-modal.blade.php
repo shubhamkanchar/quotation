@@ -2,12 +2,11 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Select Customers</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Customer</h1>
                 <button type="button" class="btn-close" id="cCustomerModalClose" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="card">
-                    <div class="card-header h3">Add Customer</div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('api.customer.store') }}" id="addBusiness">
                             @csrf
@@ -104,7 +103,7 @@
     </div>
 </div>
 
-@section('script')
+@push('scripts')
     <script type="module">
         $(document).ready(function() {
             $(document).on('submit', '#addBusiness', function(e) {
@@ -249,4 +248,4 @@
             });
         })
     </script>
-@endsection
+@endpush
