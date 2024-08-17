@@ -191,7 +191,7 @@ class EditInvoice extends Component
         $dueDate = $this->due_date;
         $poNo = $this->po_no;
         $fileName = 'Inv_'.$invoiceNumber.'.pdf';
-        $pdf = Pdf::loadView('make-invoice\pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'totalAmount', 'amountInWord', 'paidAmount', 'invoiceNumber', 'poNo', 'dueDate'));
+        $pdf = Pdf::loadView('make-invoice.pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'totalAmount', 'amountInWord', 'paidAmount', 'invoiceNumber', 'poNo', 'dueDate'));
         return response()->streamDownload(function () use ($pdf) {
            echo  $pdf->stream();
         }, $fileName);

@@ -158,7 +158,7 @@ class EditPurchaseOrder extends Component
         $totalAmount = $this->totalAmount;
         $purchaseNumber = $this->savedPurchaseOrder->purchase_order_no;
         $fileName = 'PO_'.$purchaseNumber.'.pdf';
-        $pdf = PDF::loadView('make-purchase-order\pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'totalAmount', 'purchaseNumber'));
+        $pdf = PDF::loadView('make-purchase-order.pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'totalAmount', 'purchaseNumber'));
         return response()->streamDownload(function () use ($pdf) {
            echo  $pdf->stream();
         }, $fileName);

@@ -160,7 +160,7 @@ class EditQuotation extends Component
         $quotationNumber = $this->savedQuotation->quotation_no;
 
         $fileName = 'quotation_'.$quotationNumber.'.pdf';
-        $pdf = PDF::loadView('make-quotation\pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'totalAmount', 'quotationNumber'));
+        $pdf = PDF::loadView('make-quotation.pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'totalAmount', 'quotationNumber'));
         return response()->streamDownload(function () use ($pdf) {
            echo  $pdf->stream();
         }, $fileName);

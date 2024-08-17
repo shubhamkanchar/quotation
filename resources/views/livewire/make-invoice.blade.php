@@ -6,18 +6,18 @@
                     <div class="card-header rounded-0 border-bottom-0 bg-secondary-subtle">
                         <div class="d-flex justify-content-between">
                             <div class="text-secondary ms-2">
-                                <div class="d-flex">
+                                <div class="d-flex flex-wrap gap-2">
                                     <div>
                                         <span >Invoice Date</span>
                                         <br>
                                         <input type="date" class="form-control" id="InvoiceDate" wire:model="invoice_date">
                                     </div>
-                                    <div class="ms-2">
+                                    <div>
                                         <span >Due date</span>
                                         <br>
                                         <input type="date" class="form-control" id="dueDate" wire:model="due_date">  
                                     </div>
-                                    <div class="ms-2">
+                                    <div>
                                         <span>P.O. Number </span>
                                         <br>
                                         <input type="text" class="form-control" id="PoNO" wire:model="po_no">

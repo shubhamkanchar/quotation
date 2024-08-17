@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Models\BusinessModel;
 use App\Models\User;
+use App\Models\UserBusiness;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -22,8 +24,16 @@ class AuthController extends Controller
                 'phone' => $request->phone
             ];
 
-            User::create($data);
+            $user = User::create($data);
+            $firstBusiness = BusinessModel::first();
 
+            if ($firstBusiness) {
+                $userBusiness = new UserBusiness();
+                $userBusiness->user_id = $user->id;
+                $userBusiness->business_id = $firstBusiness->id;
+                $userBusiness->save();
+            }
+            
             return response()->json([
                 'status' => 'success',
                 'message' => 'Registration successfull'

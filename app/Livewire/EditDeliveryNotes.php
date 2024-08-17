@@ -154,7 +154,7 @@ class EditDeliveryNotes extends Component
         $referenceNo = $this->reference_no;
         $orderNumber = $this->savedDeliveryNote->order_no;
         $fileName = 'order'.$orderNumber.'.pdf';
-        $pdf = PDF::loadView('make-delivery-notes\pdf', compact('products', 'customer', 'terms', 'user', 'date', 'referenceNo', 'orderNumber'));
+        $pdf = PDF::loadView('make-delivery-notes.pdf', compact('products', 'customer', 'terms', 'user', 'date', 'referenceNo', 'orderNumber'));
         return response()->streamDownload(function () use ($pdf) {
            echo  $pdf->stream();
         }, $fileName);

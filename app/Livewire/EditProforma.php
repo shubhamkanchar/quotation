@@ -192,7 +192,7 @@ class EditProforma extends Component
         $lastInvoice = MakeProformaInvoice::query()->orderBy('proforma_invoice_no', 'desc')->first();
         $proformaInvoiceNumber = $this->savedProformaInvoice->proforma_invoice_no;
     
-        $pdf = Pdf::loadView('make-proforma\pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'poNo','dueDate','totalAmount', 'amountInWord', 'paidAmount', 'proformaInvoiceNumber'));
+        $pdf = Pdf::loadView('make-proforma.pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'poNo','dueDate','totalAmount', 'amountInWord', 'paidAmount', 'proformaInvoiceNumber'));
         return response()->streamDownload(function () use ($pdf) {
            echo  $pdf->stream();
         }, 'pi_invoice.pdf');
