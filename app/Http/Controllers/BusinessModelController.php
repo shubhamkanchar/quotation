@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DataTables\BusinessDataTable;
 use App\Models\BusinessModel;
+use App\Models\UserBusiness;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,6 +40,7 @@ class BusinessModelController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
         if($request->logo){
             $file = $request->file('logo');
             $logo = $file->store('uploads', 'public');
@@ -51,7 +53,7 @@ class BusinessModelController extends Controller
         $business->business_name = $request->business_name;
         $business->contact_name = $request->contact_name;
         $business->email = $request->email;
-        $business->user_id = Auth::user()->id;
+        $business->user_id = $user->id;
         $business->number = $request->full_number;
         $business->address_1 = $request->address_1;
         $business->address_2 = $request->address_2;
@@ -66,7 +68,13 @@ class BusinessModelController extends Controller
         $business->bank_name = $request->bank_name;
         $business->logo = $logo;
         $business->signature = $signature;
+
+
         if($business->save()){
+            $userBusiness = new UserBusiness();
+            $userBusiness->user_id = $user->id;
+            $userBusiness->business_id = $business->id;
+            $userBusiness->save();
             return response()->json([
                 'message' => 'Business added successfully',
                 'route' => route('business.edit', $business->id)

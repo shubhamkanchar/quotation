@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\BusinessModel;
 use App\Models\User;
+use App\Models\UserBusiness;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -69,6 +71,16 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
         $user->assignRole('admin');
+        
+        $firstBusiness = BusinessModel::first();
+
+        if ($firstBusiness) {
+            $userBusiness = new UserBusiness();
+            $userBusiness->user_id = $user->id;
+            $userBusiness->business_id = $firstBusiness->id;
+            $userBusiness->save();
+        }
+
         return $user;
     }
 }
