@@ -109,10 +109,12 @@ class MakeQuotation extends Component
 
     public function generatePdf() {
         $this->validate([
+            'quotation_date' => 'required',
             'addedCustomer' => 'required',
             'addedProducts' => 'required',
         ], [
-            'addedCustomer' => 'Please add cutomer',
+            'quotation_date' => 'Please select the Quotation date',
+            'addedCustomer' => 'Please add customer',
             'addedProducts' => 'Please add product'
         ]);
 

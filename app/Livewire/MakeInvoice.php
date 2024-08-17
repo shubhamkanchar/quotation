@@ -131,10 +131,12 @@ class MakeInvoice extends Component
 
     public function generatePdf() {
         $this->validate([
+            'invoice_date' => 'required',
             'addedCustomer' => 'required',
             'addedProducts' => 'required',
         ], [
-            'addedCustomer' => 'Please add cutomer',
+            'invoice_date' => 'Please select In  customer',
+            'addedCustomer' => 'Please add customer',
             'addedProducts' => 'Please add product'
         ]);
 

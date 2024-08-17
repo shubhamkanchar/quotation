@@ -109,10 +109,12 @@ class MakePurchaseOrder extends Component
 
     public function generatePdf() {
         $this->validate([
+            'purchase_order_date' => 'required',
             'addedCustomer' => 'required',
             'addedProducts' => 'required',
         ], [
-            'addedCustomer' => 'Please add cutomer',
+            'purchase_order_date' => 'Please select purchase order date',
+            'addedCustomer' => 'Please add customer',
             'addedProducts' => 'Please add product'
         ]);
 

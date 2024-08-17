@@ -131,10 +131,12 @@ class MakeProforma extends Component
 
     public function generatePdf() {
         $this->validate([
+            'proforma_date' => 'required',
             'addedCustomer' => 'required',
             'addedProducts' => 'required',
         ], [
-            'addedCustomer' => 'Please add cutomer',
+            'proforma_date' => 'Please select proforma invoice date',
+            'addedCustomer' => 'Please add customer',
             'addedProducts' => 'Please add product'
         ]);
 

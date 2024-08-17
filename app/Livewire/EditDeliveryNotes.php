@@ -91,10 +91,12 @@ class EditDeliveryNotes extends Component
 
     public function updateDeliveryNote() {
         $this->validate([
+            'delivery_date' => 'required',
             'addedCustomer' => 'required',
             'addedProducts' => 'required',
         ], [
-            'addedCustomer' => 'Please add cutomer',
+            'delivery_date' => 'Please select delivery date',
+            'addedCustomer' => 'Please add customer',
             'addedProducts' => 'Please add product'
         ]);
 
@@ -134,10 +136,12 @@ class EditDeliveryNotes extends Component
 
     public function generatePdf() {
         $this->validate([
+            'delivery_date' => 'required',
             'addedCustomer' => 'required',
             'addedProducts' => 'required',
         ], [
-            'addedCustomer' => 'Please add cutomer',
+            'delivery_date' => 'Please select delivery date',
+            'addedCustomer' => 'Please add customer',
             'addedProducts' => 'Please add product'
         ]);
 
