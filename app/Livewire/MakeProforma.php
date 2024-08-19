@@ -207,8 +207,6 @@ class MakeProforma extends Component
         $proformaInvoice->terms()->sync($termIds);
         $route = route('make-proforma-invoice.edit', $proformaInvoice->uuid);
         $this->dispatch('ProformaInvoiceCreated', $route);
-
-        $pdf = Pdf::loadView('make-proforma\pdf', compact('products', 'customer', 'terms', 'charges', 'user', 'date', 'poNo','dueDate','totalAmount', 'amountInWord', 'paidAmount', 'proformaInvoiceNumber'));
     }
     public function render()
     {

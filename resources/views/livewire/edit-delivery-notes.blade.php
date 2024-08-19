@@ -66,7 +66,7 @@
                                                     <i class="fa-solid fa-up-down-left-right" wire:sortable.handle style="cursor: grab"></i>
                                                 </div>
                                             @endif
-                                            <div class="card-body">
+                                            <div class="card-body" onmousedown="event.preventDefault ? event.preventDefault() : event.returnValue = false">
                                                 <div class="d-flex justify-content-between">
                                                     <div>
                                                         <span class="fw-bold">{{ $product['product']['product_name'] }}</span> 
